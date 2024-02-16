@@ -16,6 +16,6 @@ public class User {
     Long user_id;
     String user_name;
     Boolean seller;
-    List<User> following;
-    List<User> followedBy;
+    List<Long> following;
+    List<Long> followedBy;
 }
