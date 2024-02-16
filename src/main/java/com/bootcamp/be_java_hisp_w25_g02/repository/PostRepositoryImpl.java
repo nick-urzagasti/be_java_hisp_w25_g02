@@ -9,7 +9,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-@Repository 
+@Repository
 public class PostRepositoryImpl {
     List<Post> postList = new ArrayList<>(List.of(
             new Post(0L,
