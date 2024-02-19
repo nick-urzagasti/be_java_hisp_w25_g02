@@ -13,8 +13,10 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(new GenericResponseDTO(e.getMessage()), HttpStatus.BAD_REQUEST);
     }
 
+
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<?> notFound(NotFoundException e){
         return new ResponseEntity<>(new GenericResponseDTO(e.getMessage()), HttpStatus.NOT_FOUND);
     }
+
 }

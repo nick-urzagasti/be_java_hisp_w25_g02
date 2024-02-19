@@ -16,7 +16,7 @@ public class UserRepositoryImpl implements IUserRepository{
     private void loadUsers(){
         users = new ArrayList<>(List.of(
            new User(1, "Javier", false, new ArrayList<>(List.of(
-                   7,9, 10
+                   7,9
 
            )), new ArrayList<>()),
                 new User(2, "NA", false, new ArrayList<>(), new ArrayList<>()),
@@ -47,4 +47,6 @@ public class UserRepositoryImpl implements IUserRepository{
     public List<User> findAll() {
         return this.users;
     }
+
+
 }
