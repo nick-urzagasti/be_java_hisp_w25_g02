@@ -41,8 +41,19 @@ public class PostRepositoryImpl implements IPostRepository
     }
 
     @Override
+    public Optional<Product> findProductById(long id) {
+        return this.postList.stream().filter(post -> post.getProduct().getProduct_id() == id).map(Post::getProduct).findFirst();
+    }
+
+    @Override
+    public long savePost(Post post) {
+        post.setPost_id((long) postList.size());
+        postList.add(post);
+        return post.getPost_id();
+}
     public List<Post> findByUserId(Integer userId) {
         LocalDate twoWeeksAgo = LocalDate.now().minusWeeks(2);
         return this.postList.stream().filter(post -> post.getPostDate().isAfter(twoWeeksAgo) && Objects.equals(post.getUser_id(), userId)).toList();
+
     }
 }
