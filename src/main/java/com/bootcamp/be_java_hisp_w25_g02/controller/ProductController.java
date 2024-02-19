@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class ProductController {
 
-    private IPostService postService;
+    private final IPostService postService;
     public ProductController(PostServiceImpl postService){
         this.postService = postService;
     }
