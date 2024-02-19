@@ -1,6 +1,8 @@
 package com.bootcamp.be_java_hisp_w25_g02.repository;
 
 import com.bootcamp.be_java_hisp_w25_g02.entity.User;
+import com.bootcamp.be_java_hisp_w25_g02.exception.BadRequestException;
+import com.bootcamp.be_java_hisp_w25_g02.exception.NotFoundException;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -33,7 +35,8 @@ public class UserRepositoryImpl implements IUserRepository{
                 )),
                 new User(10, "JoseMaria", true, new ArrayList<>(), new ArrayList<>(
                         List.of(1)
-                ))
+                )),
+                new User(11, "Pedro Gomez", true, new ArrayList<>(), new ArrayList<>())
 
         ));
 
@@ -42,19 +45,17 @@ public class UserRepositoryImpl implements IUserRepository{
 
     @Override
     public List<User> getFollowersList(long id) {
-        System.out.println("Los User son: " + users);
         Optional<User> myUser = this.users.stream().filter(user -> user.getUser_id() == id).findFirst();
-        System.out.println(myUser);
         List<Integer> followersListIds = new ArrayList<>();
         List<User> followersList = new ArrayList<>();
-        if (myUser.isPresent()) {
-            followersListIds = myUser.get().getFollowedBy();
-            System.out.println("Lista de Id seguidores " + followersListIds);
-            followersListIds.forEach( searchId -> {
-                Optional<User> follower = this.users.stream().filter(u -> u.getUser_id().equals(searchId)).findFirst();
-                follower.ifPresent(followersList::add);
-            });
-        }
+        if (myUser.isEmpty()) throw new NotFoundException("No existe usuario asociado a ese ID.");
+        if (!myUser.get().getSeller()) throw new BadRequestException("Este usuario no es vendedor, no puede poseer seguidores.");
+        followersListIds = myUser.get().getFollowedBy();
+        followersListIds.forEach( searchId -> {
+            Optional<User> follower = this.users.stream().filter(u -> u.getUser_id().equals(searchId)).findFirst();
+            follower.ifPresent(followersList::add);
+        });
+        if (followersList.isEmpty()) throw new NotFoundException("Este usuario no posee seguidores");
         return followersList;
     }
 

@@ -43,7 +43,6 @@ public class UserServiceImpl implements IUserService{
 
     @Override
     public FollowerListDTO getFollowersList(Integer userId) {
-        System.out.println(userRepository);
         List<User> followerList = userRepository.getFollowersList(userId);
         List<UserDTO> followerListForDto = followerList.stream()
                 .map( u -> {
@@ -51,7 +50,9 @@ public class UserServiceImpl implements IUserService{
                         }
                 ).toList();
         // Completar cuando tengamos el usuario.
-        FollowerListDTO ansFollowerListDto = new FollowerListDTO(userId, "Alfonso Gomez", followerListForDto);
+        Optional<User> user = userRepository.findById(userId);
+        if (user.isEmpty()) throw new NotFoundException("No hay usuario asociado a esa ID");
+        FollowerListDTO ansFollowerListDto = new FollowerListDTO(userId, user.get().getUser_name(), followerListForDto);
         return ansFollowerListDto;
     }
 
