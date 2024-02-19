@@ -6,24 +6,41 @@ import com.bootcamp.be_java_hisp_w25_g02.dto.response.UserFollowingDTO;
 import com.bootcamp.be_java_hisp_w25_g02.entity.User;
 import com.bootcamp.be_java_hisp_w25_g02.exception.BadRequestException;
 import com.bootcamp.be_java_hisp_w25_g02.exception.NotFoundException;
+
 import com.bootcamp.be_java_hisp_w25_g02.repository.IUserRepository;
 import com.bootcamp.be_java_hisp_w25_g02.repository.UserRepositoryImpl;
 import org.springframework.stereotype.Service;
 
 import java.util.Comparator;
 import java.util.List;
+
 import java.util.Objects;
 import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements IUserService{
-
     private IUserRepository userRepository;
+
     public UserServiceImpl(UserRepositoryImpl userRepository){
         this.userRepository = userRepository;
     }
     @Override
-    public List<Integer> getfollowedUsersId(Integer userId) {
+    public boolean existUser(Integer id) {
+        Optional<User> user= userRepository.findById(id);
+        return user.isPresent();
+    }
+
+    @Override
+    public boolean isSeller(Integer id) {
+        Optional<User> user = userRepository.findById(id);
+        if (user.isPresent() && user.get().getSeller()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    @Override
+    public List<Integer> getFollowedUsersId(Integer userId) {
         Optional<User> user = this.userRepository.findById(userId);
         if (user.isEmpty()) {
             throw new NotFoundException("El usuario no existe");
@@ -32,15 +49,50 @@ public class UserServiceImpl implements IUserService{
     }
 
     @Override
-    public UserFollowingDTO getFollowedSellers(Integer userId) {
+    public UserFollowingDTO getFollowedSellers(Integer userId, String order) {
         Optional<User> user = userRepository.findById(userId);
+        List<UserDTO> followingUserIdList;
+
         if (user.isPresent() && !user.get().getSeller()) {
-            List<UserDTO> followingUserIdList = user.get().getFollowing().stream()
+            followingUserIdList = user.get().getFollowing().stream()
                     .map(userRepository::findById)
-                    .map(user1 -> new UserDTO(user1.get().getUser_id(), user1.get().getUser_name())).toList();
+                        .map(usr -> new UserDTO(usr.get().getUser_id(), usr.get().getUser_name())).toList();
+            if (order != null && order.equalsIgnoreCase("name_asc")) {
+                followingUserIdList = followingUserIdList.stream().sorted(Comparator.comparing(UserDTO::user_name)).toList();
+            }
+            if (order != null && order.equalsIgnoreCase("name_desc")) {
+                followingUserIdList = followingUserIdList.stream().sorted(Comparator.comparing(UserDTO::user_name).reversed()).toList();
+            }
             return new UserFollowingDTO(user.get().getUser_id(), user.get().getUser_name(), followingUserIdList);
         } else {
             throw new NotFoundException("El usuario solicitado no fue encontrado.");
+        }
+    }
+
+    @Override
+    public void followUser(Integer userId, Integer userIdToFollow) {
+    Optional<User> optionalUser = this.userRepository.findById(userId);
+    Optional<User> userToFollow = this.userRepository.findById(userIdToFollow);
+
+        if (optionalUser.isPresent() && userToFollow.isPresent()) {
+            User user = optionalUser.get();
+            user.getFollowing().add(userIdToFollow);
+        } else {
+          throw new BadRequestException("El id ingresado es inválido");
+        }
+    }
+
+    @Override
+    public void unfollowUser(Integer userId, Integer userIdToUnfollow) {
+
+        Optional<User> optionalUser = this.userRepository.findById(userId);
+        Optional<User> userToUnfollow = this.userRepository.findById(userIdToUnfollow);
+
+        if (optionalUser.isPresent() && userToUnfollow.isPresent()) {
+            User user = optionalUser.get();
+            user.getFollowing().remove(userIdToUnfollow);
+        } else {
+            throw new BadRequestException("El id ingresado es inválido");
         }
     }
 
