@@ -33,7 +33,7 @@ public class UserServiceImpl implements IUserService{
     }
 
     @Override
-    public boolean esVendedor(Integer id) {
+    public boolean isSeller(Integer id) {
         Optional<User> user = userRepository.findById(id);
         if (user.isPresent() && user.get().getSeller()) {
             return true;
@@ -42,7 +42,7 @@ public class UserServiceImpl implements IUserService{
         }
     }
     @Override
-    public List<Integer> getfollowedUsersId(Integer userId) {
+    public List<Integer> getFollowedUsersId(Integer userId) {
         Optional<User> user = this.userRepository.findById(userId);
         if (user.isEmpty()) {
             throw new NotFoundException("El usuario no existe");

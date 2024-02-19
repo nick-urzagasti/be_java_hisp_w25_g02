@@ -8,10 +8,8 @@ import com.bootcamp.be_java_hisp_w25_g02.dto.response.PostDTO;
 import com.bootcamp.be_java_hisp_w25_g02.dto.response.ProductDTO;
 import com.bootcamp.be_java_hisp_w25_g02.entity.Post;
 import com.bootcamp.be_java_hisp_w25_g02.entity.Product;
-import com.bootcamp.be_java_hisp_w25_g02.entity.User;
 import com.bootcamp.be_java_hisp_w25_g02.repository.IPostRepository;
 import com.bootcamp.be_java_hisp_w25_g02.repository.PostRepositoryImpl;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.bootcamp.be_java_hisp_w25_g02.exception.BadRequestException;
 import com.bootcamp.be_java_hisp_w25_g02.exception.NotFoundException;
 import org.springframework.stereotype.Service;
@@ -29,19 +27,19 @@ public class PostServiceImpl implements IPostService{
         this.userService =userService;
     }
 
-    public GenericResponseDTO savePost(PostDTO post){
-        if (!userService.existUser(post.user_id())){
-            throw new BadRequestException("El Usuario no existe");
+    public GenericResponseDTO savePost(PostDTO postDTO){
+        if (!userService.existUser(postDTO.user_id())){
+            throw new BadRequestException("El usuario no existe");
         }
-        if (!userService.esVendedor(post.user_id())){
+        if (!userService.isSeller(postDTO.user_id())){
             throw new BadRequestException("El usuario no es vendedor");
         }
-        if (this.postRepository.findProductById(post.product().product_id()).isPresent()){
+        if (this.postRepository.findProductById(postDTO.product().product_id()).isPresent()){
             throw new BadRequestException("Ya existe un Producto con ese ID");
         }
 
-        Post postReal = mapDtoToPost(post);
-        long id = this.postRepository.savePost(postReal);
+        Post post = mapDtoToPost(postDTO);
+        long id = this.postRepository.savePost(post);
         System.out.println(this.postRepository.findAll().toString());
         return new GenericResponseDTO("Post creado con exito con el id: "+ id);
     }
@@ -55,7 +53,7 @@ public class PostServiceImpl implements IPostService{
         if (!order.equalsIgnoreCase("date_asc") && !order.equalsIgnoreCase("date_desc") ){
             throw new BadRequestException("Parametro order no reconocido. Debe tener el valor date_asc o date_desc");
         }
-        List<Integer> followedUsers = userService.getfollowedUsersId(userId);
+        List<Integer> followedUsers = userService.getFollowedUsersId(userId);
         List<Post> posts = new ArrayList<>();
         for(Integer sellerId: followedUsers){
             posts.addAll(this.postRepository.findByUserId(sellerId));
