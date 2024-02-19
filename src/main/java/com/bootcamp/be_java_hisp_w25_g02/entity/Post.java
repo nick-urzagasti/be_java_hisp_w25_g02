@@ -14,8 +14,8 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Post {
-    Long post_id;
-    Long user_id;
+    Integer post_id;
+    Integer user_id;
     @JsonFormat(pattern = "dd-MM-yyyy") //TODO: corroborar que formatee a dd-MM-yyyy. Es posible agregar "yyyy-MM-dd@HH:mm:ss.SSSZ"
     LocalDate postDate;
     Product product;
