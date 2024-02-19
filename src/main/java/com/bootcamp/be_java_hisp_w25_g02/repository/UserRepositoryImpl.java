@@ -35,8 +35,7 @@ public class UserRepositoryImpl implements IUserRepository{
                         List.of(1)
                 ))
 
-        )
-        );
+        ));
     }
 
     @Override
