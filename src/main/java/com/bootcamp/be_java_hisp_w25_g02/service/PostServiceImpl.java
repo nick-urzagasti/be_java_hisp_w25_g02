@@ -48,7 +48,7 @@ public class PostServiceImpl implements IPostService{
     }
    
     @Override
-    public FollowingPostDTO searchPostsOrderedByDate(Integer userId, String order) {
+    public FollowingPostDTO getPostsOrderedByDate(Integer userId, String order) {
         if (!order.equalsIgnoreCase("date_asc") && !order.equalsIgnoreCase("date_desc") ){
             throw new BadRequestException("Parametro order no reconocido. Debe tener el valor date_asc o date_desc");
         }
