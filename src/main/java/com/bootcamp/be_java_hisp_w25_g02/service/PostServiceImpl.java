@@ -40,7 +40,6 @@ public class PostServiceImpl implements IPostService{
 
         Post post = mapDtoToPost(postDTO);
         long id = this.postRepository.savePost(post);
-        System.out.println(this.postRepository.findAll().toString());
         return new GenericResponseDTO("Post creado con exito con el id: "+ id);
     }
   
