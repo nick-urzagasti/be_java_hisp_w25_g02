@@ -4,6 +4,7 @@ package com.bootcamp.be_java_hisp_w25_g02.service;
 import com.bootcamp.be_java_hisp_w25_g02.dto.response.UserDTO;
 import com.bootcamp.be_java_hisp_w25_g02.dto.response.UserFollowingDTO;
 import com.bootcamp.be_java_hisp_w25_g02.entity.User;
+import com.bootcamp.be_java_hisp_w25_g02.exception.BadRequestException;
 import com.bootcamp.be_java_hisp_w25_g02.exception.NotFoundException;
 import com.bootcamp.be_java_hisp_w25_g02.repository.IUserRepository;
 import com.bootcamp.be_java_hisp_w25_g02.repository.UserRepositoryImpl;
@@ -38,6 +39,35 @@ public class UserServiceImpl implements IUserService{
             return new UserFollowingDTO(user.get().getUser_id(), user.get().getUser_name(), followingUserIdList);
         } else {
             throw new NotFoundException("El usuario solicitado no fue encontrado.");
+        }
+
+    }
+
+    @Override
+    public void followUser(Integer userId, Integer userIdToFollow) {
+    Optional<User> optionalUser = this.userRepository.findById(userId);
+    Optional<User> userToFollow = this.userRepository.findById(userIdToFollow);
+
+        if (optionalUser.isPresent() && userToFollow.isPresent()) {
+            User user = optionalUser.get();
+            user.getFollowing().add(userIdToFollow);
+        } else {
+          throw new BadRequestException("El id ingresado es inválido");
+        }
+
+    }
+
+    @Override
+    public void unfollowUser(Integer userId, Integer userIdToUnfollow) {
+
+        Optional<User> optionalUser = this.userRepository.findById(userId);
+        Optional<User> userToUnfollow = this.userRepository.findById(userIdToUnfollow);
+
+        if (optionalUser.isPresent() && userToUnfollow.isPresent()) {
+            User user = optionalUser.get();
+            user.getFollowing().remove(userIdToUnfollow);
+        } else {
+            throw new BadRequestException("El id ingresado es inválido");
         }
 
     }
