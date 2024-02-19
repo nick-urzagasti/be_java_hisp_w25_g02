@@ -4,6 +4,7 @@ import com.bootcamp.be_java_hisp_w25_g02.dto.response.FollowerListDTO;
 import com.bootcamp.be_java_hisp_w25_g02.dto.response.UserDTO;
 import com.bootcamp.be_java_hisp_w25_g02.dto.response.UserFollowingDTO;
 import com.bootcamp.be_java_hisp_w25_g02.entity.User;
+import com.bootcamp.be_java_hisp_w25_g02.exception.BadRequestException;
 import com.bootcamp.be_java_hisp_w25_g02.exception.NotFoundException;
 import com.bootcamp.be_java_hisp_w25_g02.repository.IUserRepository;
 import com.bootcamp.be_java_hisp_w25_g02.repository.UserRepositoryImpl;
@@ -43,17 +44,15 @@ public class UserServiceImpl implements IUserService{
 
     @Override
     public FollowerListDTO getFollowersList(Integer userId) {
-        List<User> followerList = userRepository.getFollowersList(userId);
-        List<UserDTO> followerListForDto = followerList.stream()
-                .map( u -> {
-                            return userToUserDto(u);
-                        }
-                ).toList();
-        // Completar cuando tengamos el usuario.
         Optional<User> user = userRepository.findById(userId);
         if (user.isEmpty()) throw new NotFoundException("No hay usuario asociado a esa ID");
-        FollowerListDTO ansFollowerListDto = new FollowerListDTO(userId, user.get().getUser_name(), followerListForDto);
-        return ansFollowerListDto;
+        if (!user.get().getSeller()) throw new BadRequestException("Este usuario no es vendedor, no puede poseer seguidores.");
+        List<Integer> followersIdList = user.get().getFollowedBy();
+        if (followersIdList.isEmpty()) throw new NotFoundException("El usuario no posee seguidores");
+        List<UserDTO> followersList = followersIdList.stream().map(userRepository::findById)
+                .map(userA -> new UserDTO(userA.get().getUser_id(), userA.get().getUser_name())).toList();
+        FollowerListDTO ansDTO = new FollowerListDTO(userId, user.get().getUser_name(), followersList);
+        return ansDTO;
     }
 
     public UserDTO userToUserDto(User user) {

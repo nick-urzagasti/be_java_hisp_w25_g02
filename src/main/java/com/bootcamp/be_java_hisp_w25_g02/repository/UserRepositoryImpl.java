@@ -39,25 +39,8 @@ public class UserRepositoryImpl implements IUserRepository{
                 new User(11, "Pedro Gomez", true, new ArrayList<>(), new ArrayList<>())
 
         ));
-
-        System.out.println(users);
     }
 
-    @Override
-    public List<User> getFollowersList(long id) {
-        Optional<User> myUser = this.users.stream().filter(user -> user.getUser_id() == id).findFirst();
-        List<Integer> followersListIds = new ArrayList<>();
-        List<User> followersList = new ArrayList<>();
-        if (myUser.isEmpty()) throw new NotFoundException("No existe usuario asociado a ese ID.");
-        if (!myUser.get().getSeller()) throw new BadRequestException("Este usuario no es vendedor, no puede poseer seguidores.");
-        followersListIds = myUser.get().getFollowedBy();
-        followersListIds.forEach( searchId -> {
-            Optional<User> follower = this.users.stream().filter(u -> u.getUser_id().equals(searchId)).findFirst();
-            follower.ifPresent(followersList::add);
-        });
-        if (followersList.isEmpty()) throw new NotFoundException("Este usuario no posee seguidores");
-        return followersList;
-    }
 
     @Override
     public Optional<User> findById(Integer id) {
