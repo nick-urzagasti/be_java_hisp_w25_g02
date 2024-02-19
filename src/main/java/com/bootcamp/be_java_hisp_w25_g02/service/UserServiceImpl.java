@@ -54,10 +54,10 @@ public class UserServiceImpl implements IUserService{
         List<UserDTO> followersList = followersIdList.stream().map(userRepository::findById)
                 .map(userA -> new UserDTO(userA.get().getUser_id(), userA.get().getUser_name())).toList();
         // Aquí lógica de ordenamiento si hay orden
-        if (order != null && order.equalsIgnoreCase("asc")){
+        if (order != null && order.equalsIgnoreCase("name_asc")){
             followersList = followersList.stream().sorted(Comparator.comparing(UserDTO::user_name)).toList();
         }
-        if (order != null && order.equalsIgnoreCase("desc")){
+        if (order != null && order.equalsIgnoreCase("name_desc")){
             followersList = followersList.stream().sorted(Comparator.comparing(UserDTO::user_name).reversed()).toList();
         }
         FollowerListDTO ansDTO = new FollowerListDTO(userId, user.get().getUser_name(), followersList);
