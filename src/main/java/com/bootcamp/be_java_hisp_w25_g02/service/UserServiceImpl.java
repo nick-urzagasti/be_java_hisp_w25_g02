@@ -83,14 +83,21 @@ public class UserServiceImpl implements IUserService{
 
     @Override
     public void followUser(Integer userId, Integer userIdToFollow) {
-    Optional<User> optionalUser = this.userRepository.findById(userId);
-    Optional<User> userToFollow = this.userRepository.findById(userIdToFollow);
+        Optional<User> optionalUser = this.userRepository.findById(userId);
+        Optional<User> optionalUserToFollow = this.userRepository.findById(userIdToFollow);
 
-        if (optionalUser.isPresent() && userToFollow.isPresent()) {
+        if (optionalUser.isPresent() && optionalUserToFollow.isPresent()) {
             User user = optionalUser.get();
-            user.getFollowing().add(userIdToFollow);
+            User userToFollow = optionalUserToFollow.get();
+
+            if (!userToFollow.getSeller()) {
+                throw new BadRequestException("No puede seguir al usuario porque no es vendedor");
+            } else {
+                user.getFollowing().add(userIdToFollow);
+            }
+
         } else {
-          throw new BadRequestException("El id ingresado es inválido");
+            throw new BadRequestException("El id ingresado es inválido");
         }
     }
 
