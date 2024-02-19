@@ -13,7 +13,7 @@ import java.nio.DoubleBuffer;
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Product {
-    long product_id;
+    Integer product_id;
     String product_name;
     String type;
     String brand;
