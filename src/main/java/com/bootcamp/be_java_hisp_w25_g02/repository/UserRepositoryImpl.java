@@ -9,12 +9,12 @@ import java.util.Optional;
 
 @Repository
 public class UserRepositoryImpl implements IUserRepository{
-    List<User> users;
+    List<User> userList;
     public UserRepositoryImpl(){
         loadUsers();
     }
     private void loadUsers(){
-        users = new ArrayList<>(List.of(
+        userList = new ArrayList<>(List.of(
            new User(1, "Javier", false, new ArrayList<>(List.of(
                    7,9
 
@@ -40,12 +40,12 @@ public class UserRepositoryImpl implements IUserRepository{
 
     @Override
     public Optional<User> findById(Integer id) {
-        return this.users.stream().filter(user -> user.getUser_id().equals(id)).findFirst();
+        return this.userList.stream().filter(user -> user.getUser_id().equals(id)).findFirst();
     }
 
     @Override
     public List<User> findAll() {
-        return this.users;
+        return this.userList;
     }
 
 
