@@ -81,7 +81,6 @@ public class UserServiceImpl implements IUserService{
         } else {
           throw new BadRequestException("El id ingresado es inválido");
         }
-
     }
 
     @Override
