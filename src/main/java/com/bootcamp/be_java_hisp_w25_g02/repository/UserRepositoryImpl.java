@@ -15,37 +15,38 @@ public class UserRepositoryImpl implements IUserRepository{
     }
     private void loadUsers(){
         users = new ArrayList<>(List.of(
-           new User(1L, "Javier", false, new ArrayList<>(List.of(
-                   7L,9L, 10L
+           new User(1, "Javier", false, new ArrayList<>(List.of(
+                   7,9, 10
 
            )), new ArrayList<>()),
-                new User(2L, "NA", false, new ArrayList<>(), new ArrayList<>()),
-                new User(3L, "Martin", false, new ArrayList<>(), new ArrayList<>()),
-                new User(7L, "Maria", true, new ArrayList<>(),
+                new User(2, "NA", false, new ArrayList<>(), new ArrayList<>()),
+                new User(3, "Martin", false, new ArrayList<>(), new ArrayList<>()),
+                new User(7, "Maria", true, new ArrayList<>(),
 
-                        new ArrayList<>(List.of(1L)
+                        new ArrayList<>(List.of(1)
                         )),
-                new User(8L, "Marcos", false, new ArrayList<>(), new ArrayList<>(
+                new User(8, "Marcos", false, new ArrayList<>(), new ArrayList<>(
 
                 )),
-                new User(9L, "Malena", true, new ArrayList<>(), new ArrayList<>(
-                        List.of(1L)
+                new User(9, "Malena", true, new ArrayList<>(), new ArrayList<>(
+                        List.of(1)
                 )),
-                new User(10L, "JoseMaria", true, new ArrayList<>(), new ArrayList<>(
-                        List.of(1L)
+                new User(10, "JoseMaria", true, new ArrayList<>(), new ArrayList<>(
+                        List.of(1)
                 ))
 
-        )
-        );
+        ));
     }
 
     @Override
-    public Optional<User> findById(long id) {
-        return this.users.stream().filter(user -> user.getUser_id() == id).findFirst();
+    public Optional<User> findById(Integer id) {
+        return this.users.stream().filter(user -> user.getUser_id().equals(id)).findFirst();
     }
 
     @Override
     public List<User> findAll() {
         return this.users;
     }
+
+
 }

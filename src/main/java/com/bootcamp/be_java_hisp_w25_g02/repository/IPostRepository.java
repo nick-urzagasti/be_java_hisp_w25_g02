@@ -6,9 +6,10 @@ import com.bootcamp.be_java_hisp_w25_g02.entity.Post;
 import com.bootcamp.be_java_hisp_w25_g02.entity.Product;
 
 public interface IPostRepository {
-    Optional<Post> findById(long id);
+    Optional<Post> findById(Integer id);
     List<Post> findAll();
-
     Optional<Product> findProductById(long id);
     long savePost(Post post);
+    List<Post> findByUserId(Integer userId);
+
 }
