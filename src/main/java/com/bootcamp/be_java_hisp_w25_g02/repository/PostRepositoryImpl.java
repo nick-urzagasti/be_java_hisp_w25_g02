@@ -32,4 +32,16 @@ public class PostRepositoryImpl implements IPostRepository
     public List<Post> findAll() {
         return this.postList;
     }
+
+    @Override
+    public Optional<Product> findProductById(long id) {
+        return this.postList.stream().filter(post -> post.getProduct().getProduct_id() == id).map(Post::getProduct).findFirst();
+    }
+
+    @Override
+    public long savePost(Post post) {
+        post.setPost_id((long) postList.size());
+        postList.add(post);
+        return post.getPost_id();
+    }
 }
