@@ -10,7 +10,9 @@ import com.bootcamp.be_java_hisp_w25_g02.repository.IUserRepository;
 import com.bootcamp.be_java_hisp_w25_g02.repository.UserRepositoryImpl;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -43,7 +45,7 @@ public class UserServiceImpl implements IUserService{
     }
 
     @Override
-    public FollowerListDTO getFollowersList(Integer userId) {
+    public FollowerListDTO getFollowersList(Integer userId, String order) {
         Optional<User> user = userRepository.findById(userId);
         if (user.isEmpty()) throw new NotFoundException("No hay usuario asociado a esa ID");
         if (!user.get().getSeller()) throw new BadRequestException("Este usuario no es vendedor, no puede poseer seguidores.");
@@ -51,6 +53,13 @@ public class UserServiceImpl implements IUserService{
         if (followersIdList.isEmpty()) throw new NotFoundException("El usuario no posee seguidores");
         List<UserDTO> followersList = followersIdList.stream().map(userRepository::findById)
                 .map(userA -> new UserDTO(userA.get().getUser_id(), userA.get().getUser_name())).toList();
+        // Aquí lógica de ordenamiento si hay orden
+        if (order != null && order.equalsIgnoreCase("asc")){
+            followersList = followersList.stream().sorted(Comparator.comparing(UserDTO::user_name)).toList();
+        }
+        if (order != null && order.equalsIgnoreCase("desc")){
+            followersList = followersList.stream().sorted(Comparator.comparing(UserDTO::user_name).reversed()).toList();
+        }
         FollowerListDTO ansDTO = new FollowerListDTO(userId, user.get().getUser_name(), followersList);
         return ansDTO;
     }

@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -23,8 +24,9 @@ public class UserController {
     }
 
     @GetMapping("/user/{userId}/followers")
-    public ResponseEntity<?> getFollowersList(@PathVariable Integer userId){
-        FollowerListDTO followersList = userService.getFollowersList(userId);
+    public ResponseEntity<?> getFollowersList(@PathVariable Integer userId, @RequestParam(required = false) String order){
+        System.out.println(order);
+        FollowerListDTO followersList = userService.getFollowersList(userId, order);
         return new ResponseEntity<>(followersList, HttpStatus.OK);
     }
 }

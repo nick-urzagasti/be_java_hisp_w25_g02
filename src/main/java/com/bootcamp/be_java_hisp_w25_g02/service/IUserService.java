@@ -10,7 +10,7 @@ public interface IUserService {
 
     UserFollowingDTO getFollowedSellers(Integer userId);
 
-    FollowerListDTO getFollowersList(Integer userId);
+    FollowerListDTO getFollowersList(Integer userId, String order);
 
 }
 

@@ -31,7 +31,7 @@ public class UserRepositoryImpl implements IUserRepository{
 
                 )),
                 new User(9, "Malena", true, new ArrayList<>(), new ArrayList<>(
-                        List.of(1)
+                        List.of(1, 3, 7)
                 )),
                 new User(10, "JoseMaria", true, new ArrayList<>(), new ArrayList<>(
                         List.of(1)
