@@ -1,6 +1,5 @@
 package com.bootcamp.be_java_hisp_w25_g02.controller;
 import com.bootcamp.be_java_hisp_w25_g02.dto.response.PostDTO;
-import com.bootcamp.be_java_hisp_w25_g02.entity.Post;
 import com.bootcamp.be_java_hisp_w25_g02.service.IPostService;
 import com.bootcamp.be_java_hisp_w25_g02.service.PostServiceImpl;
 import org.springframework.http.HttpStatus;
