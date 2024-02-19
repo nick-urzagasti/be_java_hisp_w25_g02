@@ -19,7 +19,7 @@ public class UserController {
         this.userService = userService1;
     }
     @GetMapping("/users/{userId}/followed/list")
-    public ResponseEntity<UserFollowingDTO> getFollowedSellers(@PathVariable Long userId) {
+    public ResponseEntity<UserFollowingDTO> getFollowedSellers(@PathVariable Integer userId) {
         return new ResponseEntity<>(userService.getFollowedSellers(userId), HttpStatus.OK);
     }
 }

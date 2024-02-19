@@ -20,7 +20,7 @@ public class UserServiceImpl implements IUserService{
     }
 
     @Override
-    public UserFollowingDTO getFollowedSellers(Long userId) {
+    public UserFollowingDTO getFollowedSellers(Integer userId) {
         Optional<User> user = userRepository.findById(userId);
         if (user.isPresent() && !user.get().getSeller()) {
             List<UserDTO> followingUserIdList = user.get().getFollowing().stream()
