@@ -7,4 +7,5 @@ import com.bootcamp.be_java_hisp_w25_g02.entity.Post;
 public interface IPostRepository {
     Optional<Post> findById(long id);
     List<Post> findAll();
+    List<Post> findByUserId(Long userId);
 }

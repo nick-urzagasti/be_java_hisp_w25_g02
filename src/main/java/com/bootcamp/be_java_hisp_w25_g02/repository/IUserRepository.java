@@ -8,4 +8,5 @@ import java.util.Optional;
 public interface IUserRepository {
     Optional<User> findById(long id);
     List<User> findAll();
+
 }

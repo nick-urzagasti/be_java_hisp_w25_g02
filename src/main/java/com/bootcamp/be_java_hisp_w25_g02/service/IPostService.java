@@ -1,5 +1,7 @@
 package com.bootcamp.be_java_hisp_w25_g02.service;
 
-public interface IPostService {
+import com.bootcamp.be_java_hisp_w25_g02.dto.response.FollowingPostDTO;
 
+public interface IPostService {
+    FollowingPostDTO searchPostsOrderedByDate(Long userId, String order);
 }
