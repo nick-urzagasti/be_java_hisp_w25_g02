@@ -36,6 +36,26 @@ public class UserRepositoryImpl implements IUserRepository{
                 ))
 
         ));
+
+        System.out.println(users);
+    }
+
+    @Override
+    public List<User> getFollowersList(long id) {
+        System.out.println("Los User son: " + users);
+        Optional<User> myUser = this.users.stream().filter(user -> user.getUser_id() == id).findFirst();
+        System.out.println(myUser);
+        List<Integer> followersListIds = new ArrayList<>();
+        List<User> followersList = new ArrayList<>();
+        if (myUser.isPresent()) {
+            followersListIds = myUser.get().getFollowedBy();
+            System.out.println("Lista de Id seguidores " + followersListIds);
+            followersListIds.forEach( searchId -> {
+                Optional<User> follower = this.users.stream().filter(u -> u.getUser_id().equals(searchId)).findFirst();
+                follower.ifPresent(followersList::add);
+            });
+        }
+        return followersList;
     }
 
     @Override
