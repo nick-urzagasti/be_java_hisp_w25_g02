@@ -7,7 +7,6 @@ import com.bootcamp.be_java_hisp_w25_g02.entity.User;
 import com.bootcamp.be_java_hisp_w25_g02.dto.response.UserDTO;
 import com.bootcamp.be_java_hisp_w25_g02.dto.response.UserFollowingDTO;
 
-import com.bootcamp.be_java_hisp_w25_g02.entity.User;
 import com.bootcamp.be_java_hisp_w25_g02.exception.BadRequestException;
 
 import com.bootcamp.be_java_hisp_w25_g02.exception.NotFoundException;
@@ -28,19 +27,20 @@ public class UserServiceImpl implements IUserService{
         this.userRepository = userRepository;
     }
     @Override
-    public boolean existUser(long id) {
+    public boolean existUser(Integer id) {
         Optional<User> user= userRepository.findById(id);
         return user.isPresent();
     }
 
     @Override
-    public boolean esVendedor(long id) {
+    public boolean esVendedor(Integer id) {
         Optional<User> user = userRepository.findById(id);
-        if (user.isPresent() && user.get().getSeller()){
+        if (user.isPresent() && user.get().getSeller()) {
             return true;
-        }else {
+        } else {
             return false;
         }
+    }
     @Override
     public List<Integer> getfollowedUsersId(Integer userId) {
         Optional<User> user = this.userRepository.findById(userId);

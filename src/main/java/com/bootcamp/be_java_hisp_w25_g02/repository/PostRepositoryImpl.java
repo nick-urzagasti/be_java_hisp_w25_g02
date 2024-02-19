@@ -2,7 +2,6 @@ package com.bootcamp.be_java_hisp_w25_g02.repository;
 
 import com.bootcamp.be_java_hisp_w25_g02.entity.Post;
 import com.bootcamp.be_java_hisp_w25_g02.entity.Product;
-import com.bootcamp.be_java_hisp_w25_g02.entity.User;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
@@ -32,7 +31,7 @@ public class PostRepositoryImpl implements IPostRepository
 
     @Override
     public Optional<Post> findById(Integer id) {
-        return this.postList.stream().filter(post -> post.getPost_id() == id).findFirst();
+        return this.postList.stream().filter(post -> Objects.equals(post.getPost_id(), id)).findFirst();
     }
 
     @Override
@@ -41,13 +40,13 @@ public class PostRepositoryImpl implements IPostRepository
     }
 
     @Override
-    public Optional<Product> findProductById(long id) {
+    public Optional<Product> findProductById(int id) {
         return this.postList.stream().filter(post -> post.getProduct().getProduct_id() == id).map(Post::getProduct).findFirst();
     }
 
     @Override
     public long savePost(Post post) {
-        post.setPost_id((long) postList.size());
+        post.setPost_id( postList.size());
         postList.add(post);
         return post.getPost_id();
 }

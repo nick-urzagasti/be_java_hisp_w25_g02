@@ -7,8 +7,7 @@ import com.bootcamp.be_java_hisp_w25_g02.entity.User;
 import java.util.Optional;
 
 public interface IUserService {
-    public boolean existUser(long id);
-    public boolean esVendedor(long id);
+
     List<Integer> getfollowedUsersId(Integer userId);
 
     UserFollowingDTO getFollowedSellers(Integer userId);
@@ -17,4 +16,7 @@ public interface IUserService {
     void unfollowUser(Integer userId, Integer userIdToUnfollow);
 
 
+    boolean existUser(Integer id);
+
+    boolean esVendedor(Integer id);
 }

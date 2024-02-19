@@ -22,9 +22,9 @@ public class ProductController {
     }
   
     @PostMapping("products/post")
-    public ResponseEntity<?> savePost(@RequestBody PostDTO post){
+    public ResponseEntity<?> savePost(@RequestBody PostDTO post) {
         return new ResponseEntity<>(this.postService.savePost(post), HttpStatus.OK);
-
+    }
 
     @GetMapping("products/followed/{userId}/list")
     public ResponseEntity<?> getFollowedPosts(@PathVariable Integer userId, @RequestParam String order){
