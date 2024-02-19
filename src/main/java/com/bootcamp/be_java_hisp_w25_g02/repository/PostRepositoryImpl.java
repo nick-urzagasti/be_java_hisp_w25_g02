@@ -14,17 +14,17 @@ import java.util.Optional;
 public class PostRepositoryImpl implements IPostRepository
 {
     List<Post> postList = new ArrayList<>(List.of(
-            new Post(0L, 1L, LocalDate.of(2000, 01, 01),
+            new Post(0, 1, LocalDate.of(2000, 01, 01),
                     new Product(0, "Pelopincho", "Piletas", "XXX", "Azul", "2000 litros"), 2, 52000.0),
-            new Post(1L,
-                   2L, LocalDate.of(2005, 02, 10),
+            new Post(1,
+                   2, LocalDate.of(2005, 02, 10),
                     new Product(0, "Lentes de sol", "Lentes", "Ray Ban", "Gris", "Lorem ipsum"), 3, 13500.0),
-            new Post(2L, 4L, LocalDate.of(2005, 02, 10),
+            new Post(2, 4, LocalDate.of(2005, 02, 10),
                     new Product(0, "Mouse gamer", "Informática", "Logitech", "Gris", "Lorem ipsum"), 4, 7500.0)
     ));
 
     @Override
-    public Optional<Post> findById(long id) {
+    public Optional<Post> findById(Integer id) {
         return this.postList.stream().filter(post -> post.getPost_id() == id).findFirst();
     }
 
