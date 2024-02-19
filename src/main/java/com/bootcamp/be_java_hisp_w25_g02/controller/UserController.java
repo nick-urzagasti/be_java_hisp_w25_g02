@@ -1,5 +1,6 @@
 package com.bootcamp.be_java_hisp_w25_g02.controller;
 
+import com.bootcamp.be_java_hisp_w25_g02.dto.response.FollowerListDTO;
 import com.bootcamp.be_java_hisp_w25_g02.dto.response.UserFollowingDTO;
 import com.bootcamp.be_java_hisp_w25_g02.service.IUserService;
 import com.bootcamp.be_java_hisp_w25_g02.service.UserServiceImpl;
@@ -34,5 +35,11 @@ public class UserController {
     public ResponseEntity<?> unfollowSeller(@PathVariable Integer userId, @PathVariable Integer userIdToUnfollow) {
         userService.unfollowUser(userId, userIdToUnfollow);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("/user/{userId}/followers")
+    public ResponseEntity<?> getFollowersList(@PathVariable Integer userId, @RequestParam(required = false) String order){
+        FollowerListDTO followersList = userService.getFollowersList(userId, order);
+        return new ResponseEntity<>(followersList, HttpStatus.OK);
     }
 }

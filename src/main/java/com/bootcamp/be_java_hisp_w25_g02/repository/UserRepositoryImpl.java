@@ -1,6 +1,8 @@
 package com.bootcamp.be_java_hisp_w25_g02.repository;
 
 import com.bootcamp.be_java_hisp_w25_g02.entity.User;
+import com.bootcamp.be_java_hisp_w25_g02.exception.BadRequestException;
+import com.bootcamp.be_java_hisp_w25_g02.exception.NotFoundException;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -29,14 +31,16 @@ public class UserRepositoryImpl implements IUserRepository{
 
                 )),
                 new User(9, "Malena", true, new ArrayList<>(), new ArrayList<>(
-                        List.of(1)
+                        List.of(1, 3, 7)
                 )),
                 new User(10, "JoseMaria", true, new ArrayList<>(), new ArrayList<>(
                         List.of(1)
-                ))
+                )),
+                new User(11, "Pedro Gomez", true, new ArrayList<>(), new ArrayList<>())
 
         ));
     }
+
 
     @Override
     public Optional<User> findById(Integer id) {
