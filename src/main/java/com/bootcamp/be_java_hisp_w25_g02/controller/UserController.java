@@ -42,6 +42,7 @@ public class UserController {
     }
 
     @GetMapping("/user/{userId}/followers")
+    // Ojo -- Originalmente habiamos escrito @RequestParam(required = false) para String order, pero por la User Story, parece obligatorio.
     public ResponseEntity<?> getFollowersList(@PathVariable @Positive Integer userId, @RequestParam(required = false) String order){
         FollowerListDTO followersList = userService.getFollowersList(userId, order);
         return new ResponseEntity<>(followersList, HttpStatus.OK);
