@@ -13,9 +13,10 @@ import java.util.List;
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class User {
-    Integer user_id;
-    String user_name;
+    Integer userId;
+    String userName;
     Boolean seller;
+
     List<Integer> following;
     List<Integer> followedBy;
 }

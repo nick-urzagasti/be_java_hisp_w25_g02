@@ -15,7 +15,6 @@ import com.bootcamp.be_java_hisp_w25_g02.dto.response.FollowerCountDTO;
 import java.util.Comparator;
 import java.util.List;
 
-import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -34,8 +33,8 @@ public class UserServiceImpl implements IUserService{
     public FollowerCountDTO getUserTotalFollowers(Integer id) {
         Optional<User> user = userRepository.findById(id);
         if(user.isPresent()){
-            return new FollowerCountDTO(user.get().getUser_id(),
-                    user.get().getUser_name(),
+            return new FollowerCountDTO(user.get().getUserId(),
+                    user.get().getUserName(),
                     user.get().getFollowing().stream().count());
         } else {
             throw new BadRequestException("No encontrado el user con ese ID");
@@ -68,14 +67,19 @@ public class UserServiceImpl implements IUserService{
         if (user.isPresent() && !user.get().getSeller()) {
             followingUserIdList = user.get().getFollowing().stream()
                     .map(userRepository::findById)
-                        .map(usr -> new UserDTO(usr.get().getUser_id(), usr.get().getUser_name())).toList();
+                    .map(usr -> new UserDTO(usr.get().getUserId(), usr.get().getUserName())).toList();
             if (order != null && order.equalsIgnoreCase("name_asc")) {
-                followingUserIdList = followingUserIdList.stream().sorted(Comparator.comparing(UserDTO::user_name)).toList();
+                // Agregar excepcion en caso de que no exista
+                followingUserIdList = followingUserIdList.stream().sorted(Comparator.comparing(UserDTO::userName)).toList();
             }
+            // if (order != null && !order.equalsIgnoreCase("name_asc") && !order.equalsIgnoreCase("name_desc")) {
+            //     agregar excepcion
+            // }
             if (order != null && order.equalsIgnoreCase("name_desc")) {
-                followingUserIdList = followingUserIdList.stream().sorted(Comparator.comparing(UserDTO::user_name).reversed()).toList();
+                // Agregar excepcion en caso de que no exista
+                followingUserIdList = followingUserIdList.stream().sorted(Comparator.comparing(UserDTO::userName).reversed()).toList();
             }
-            return new UserFollowingDTO(user.get().getUser_id(), user.get().getUser_name(), followingUserIdList);
+            return new UserFollowingDTO(user.get().getUserId(), user.get().getUserName(), followingUserIdList);
         } else {
             throw new NotFoundException("El usuario solicitado no fue encontrado.");
         }
@@ -123,19 +127,19 @@ public class UserServiceImpl implements IUserService{
         List<Integer> followersIdList = user.get().getFollowedBy();
         if (followersIdList.isEmpty()) throw new NotFoundException("El usuario no posee seguidores");
         List<UserDTO> followersList = followersIdList.stream().map(userRepository::findById)
-                .map(userA -> new UserDTO(userA.get().getUser_id(), userA.get().getUser_name())).toList();
+                .map(userA -> new UserDTO(userA.get().getUserId(), userA.get().getUserName())).toList();
         // Aquí lógica de ordenamiento si hay orden
         if (order != null && order.equalsIgnoreCase("name_asc")){
-            followersList = followersList.stream().sorted(Comparator.comparing(UserDTO::user_name)).toList();
+            followersList = followersList.stream().sorted(Comparator.comparing(UserDTO::userName)).toList();
         }
         if (order != null && order.equalsIgnoreCase("name_desc")){
-            followersList = followersList.stream().sorted(Comparator.comparing(UserDTO::user_name).reversed()).toList();
+            followersList = followersList.stream().sorted(Comparator.comparing(UserDTO::userName).reversed()).toList();
         }
-        FollowerListDTO ansDTO = new FollowerListDTO(userId, user.get().getUser_name(), followersList);
+        FollowerListDTO ansDTO = new FollowerListDTO(userId, user.get().getUserName(), followersList);
         return ansDTO;
     }
 
     public UserDTO userToUserDto(User user) {
-        return new UserDTO(user.getUser_id(), user.getUser_name());
+        return new UserDTO(user.getUserId(), user.getUserName());
     }
 }

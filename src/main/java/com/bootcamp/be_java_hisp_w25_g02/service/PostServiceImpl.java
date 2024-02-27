@@ -4,7 +4,7 @@ import com.bootcamp.be_java_hisp_w25_g02.dto.response.GenericResponseDTO;
 
 import com.bootcamp.be_java_hisp_w25_g02.dto.response.FollowingPostDTO;
 
-import com.bootcamp.be_java_hisp_w25_g02.dto.response.PostDTO;
+import com.bootcamp.be_java_hisp_w25_g02.dto.request.PostDTO;
 import com.bootcamp.be_java_hisp_w25_g02.dto.response.ProductDTO;
 import com.bootcamp.be_java_hisp_w25_g02.entity.Post;
 import com.bootcamp.be_java_hisp_w25_g02.entity.Product;
@@ -28,13 +28,13 @@ public class PostServiceImpl implements IPostService{
     }
 
     public GenericResponseDTO savePost(PostDTO postDTO){
-        if (!userService.existUser(postDTO.user_id())){
+        if (!userService.existUser(postDTO.userId())){
             throw new BadRequestException("El usuario no existe");
         }
-        if (!userService.isSeller(postDTO.user_id())){
+        if (!userService.isSeller(postDTO.userId())){
             throw new BadRequestException("El usuario no es vendedor");
         }
-        if (this.postRepository.findProductById(postDTO.product().product_id()).isPresent()){
+        if (this.postRepository.findProductById(postDTO.product().productId()).isPresent()){
             throw new BadRequestException("Ya existe un Producto con ese ID");
         }
 
@@ -44,7 +44,7 @@ public class PostServiceImpl implements IPostService{
     }
   
     private Post mapDtoToPost(PostDTO postDTO){
-        return new Post(0, postDTO.user_id(), postDTO.date(), new Product(postDTO.product().product_id(), postDTO.product().product_name(), postDTO.product().type(), postDTO.product().brand(), postDTO.product().color(), postDTO.product().notes()), postDTO.category(), postDTO.price());
+        return new Post(0, postDTO.userId(), postDTO.date(), new Product(postDTO.product().productId(), postDTO.product().productName(), postDTO.product().type(), postDTO.product().brand(), postDTO.product().color(), postDTO.product().notes()), postDTO.category(), postDTO.price());
     }
    
     @Override
@@ -70,11 +70,11 @@ public class PostServiceImpl implements IPostService{
         return new FollowingPostDTO(userId, posts.stream().map(this::mapPostToDTO).toList());
     }
     private PostDTO mapPostToDTO(Post post){
-        return new PostDTO(post.getUser_id(), post.getPostDate(), mapToProductDTO(post.getProduct()),post.getCategory(), post.getPrice());
+        return new PostDTO(post.getUserId(), post.getPostDate(), mapToProductDTO(post.getProduct()),post.getCategory(), post.getPrice());
 
     }
     private ProductDTO mapToProductDTO(Product product){
-        return new ProductDTO(product.getProduct_id(), product.getProduct_name(), product.getType(), product.getBrand(), product.getColor(), product.getNotes());
+        return new ProductDTO(product.getProductId(), product.getProductName(), product.getType(), product.getBrand(), product.getColor(), product.getNotes());
     }
 
 }
