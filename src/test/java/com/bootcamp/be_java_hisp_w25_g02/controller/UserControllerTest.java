@@ -15,6 +15,8 @@ import org.springframework.http.ResponseEntity;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+import org.springframework.boot.test.context.SpringBootTest;
+
 @ExtendWith(MockitoExtension.class)
 class UserControllerTest {
     @Mock
