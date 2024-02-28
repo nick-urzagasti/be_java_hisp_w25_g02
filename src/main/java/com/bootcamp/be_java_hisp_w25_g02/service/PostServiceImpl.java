@@ -4,7 +4,6 @@ import com.bootcamp.be_java_hisp_w25_g02.dto.request.PostDTO;
 import com.bootcamp.be_java_hisp_w25_g02.dto.response.FollowingPostDTO;
 import com.bootcamp.be_java_hisp_w25_g02.dto.response.GenericResponseDTO;
 import com.bootcamp.be_java_hisp_w25_g02.dto.response.ProductDTO;
-import com.bootcamp.be_java_hisp_w25_g02.dto.response.UserDTO;
 import com.bootcamp.be_java_hisp_w25_g02.entity.Post;
 import com.bootcamp.be_java_hisp_w25_g02.entity.Product;
 import com.bootcamp.be_java_hisp_w25_g02.exception.BadRequestException;
