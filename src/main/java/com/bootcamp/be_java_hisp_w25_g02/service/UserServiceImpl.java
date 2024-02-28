@@ -54,7 +54,11 @@ public class UserServiceImpl implements IUserService{
     @Override
     public UserDTO makeSeller(Integer id) {
         Optional<User> user = this.userRepository.findById(id);
-        user.ifPresent(value -> value.setSeller(true));
+        if (user.isPresent()){
+            user.get().setSeller(true);
+        }else {
+            throw new BadRequestException("No encontrado el user con ese ID");
+        }
         return userToUserDto(user.get());
     }
 
