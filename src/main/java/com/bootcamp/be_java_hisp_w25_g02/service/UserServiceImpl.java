@@ -77,15 +77,13 @@ public class UserServiceImpl implements IUserService{
                     .map(userRepository::findById)
                     .map(usr -> new UserDTO(usr.get().getUserId(), usr.get().getUserName())).toList();
             if (order != null && order.equalsIgnoreCase("name_asc")) {
-                // Agregar excepcion en caso de que no exista
                 followingUserIdList = followingUserIdList.stream().sorted(Comparator.comparing(UserDTO::userName)).toList();
             }
-            // if (order != null && !order.equalsIgnoreCase("name_asc") && !order.equalsIgnoreCase("name_desc")) {
-            //     agregar excepcion
-            // }
             if (order != null && order.equalsIgnoreCase("name_desc")) {
-                // Agregar excepcion en caso de que no exista
                 followingUserIdList = followingUserIdList.stream().sorted(Comparator.comparing(UserDTO::userName).reversed()).toList();
+            }
+            if (order != null && !order.equalsIgnoreCase("name_asc") && !order.equalsIgnoreCase("name_desc")) {
+                throw new BadRequestException("El valor de ordenamiento '" + order + "' no es válido. Los valores permitidos son: 'name_asc' y 'name_desc'.");
             }
             return new UserFollowingDTO(user.get().getUserId(), user.get().getUserName(), followingUserIdList);
         } else {
