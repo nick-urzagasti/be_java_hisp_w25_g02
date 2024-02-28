@@ -14,7 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 @SpringBootTest
@@ -35,6 +35,7 @@ class ProductControllerTest {
         //act
         ResponseEntity<?> actualResponse = productController.getFollowedPosts(userId, order);
         //assert
+        verify(postService, atLeast(1)).getPostsOrderedByDate(userId, order);
         assertEquals(expectedResponse, actualResponse);
     }
 
@@ -49,6 +50,7 @@ class ProductControllerTest {
         //act
         ResponseEntity<?> actualResponse = productController.getFollowedPosts(userId, order);
         //assert
+        verify(postService, atLeast(1)).getPostsOrderedByDate(userId, order);
         assertEquals(expectedResponse, actualResponse);
     }
 
