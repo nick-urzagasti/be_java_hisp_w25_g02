@@ -30,7 +30,7 @@ public class UserControllerTest {
 
     @Test
     @DisplayName("Individual - getFollowedSellers Integration Test")
-    void getFollowedSellers() throws Exception {
+    void getFollowedSellersOK() throws Exception {
         // Arrange
         Integer id = 1;
         ObjectWriter writer = new ObjectMapper().configure(SerializationFeature.WRAP_ROOT_VALUE, false).writer();
@@ -48,5 +48,31 @@ public class UserControllerTest {
 
         // Assert
         assertEquals(expectedJson, result.getResponse().getContentAsString(StandardCharsets.UTF_8));
+    }
+
+    @Test
+    @DisplayName("Individual Bonus - followSeller Integration Test")
+    void followSellerOK() throws Exception {
+        // Arrange
+        Integer userId = 1;
+        Integer userIdToUnfollow = 9;
+
+        // Act + Assert
+        mockMvc.perform(post("/users/{userId}/follow/{userIdToFollow}", userId, userIdToUnfollow))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @DisplayName("Individual Bonus - unfollowSeller Integration Test")
+    void unfollowSellerOK() throws Exception {
+        // Arrange
+        Integer userId = 1;
+        Integer userIdToFollow = 9;
+
+        // Act + Assert
+        mockMvc.perform(post("/users/{userId}/unfollow/{userIdToFollow}", userId, userIdToFollow))
+                .andDo(print())
+                .andExpect(status().isOk());
     }
 }
