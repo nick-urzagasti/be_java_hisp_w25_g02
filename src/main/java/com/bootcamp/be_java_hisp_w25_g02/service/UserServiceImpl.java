@@ -50,6 +50,14 @@ public class UserServiceImpl implements IUserService{
             return false;
         }
     }
+
+    @Override
+    public UserDTO makeSeller(Integer id) {
+        Optional<User> user = this.userRepository.findById(id);
+        user.ifPresent(value -> value.setSeller(true));
+        return userToUserDto(user.get());
+    }
+
     @Override
     public List<Integer> getFollowedUsersId(Integer userId) {
         Optional<User> user = this.userRepository.findById(userId);

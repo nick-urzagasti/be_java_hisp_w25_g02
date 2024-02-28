@@ -20,8 +20,9 @@ import org.springframework.web.bind.annotation.RestController;
 @Validated
 public class ProductController {
 
-    private final IPostService postService;
+    private IPostService postService;
     public ProductController(PostServiceImpl postService){
+
         this.postService = postService;
     }
   
@@ -31,7 +32,7 @@ public class ProductController {
     }
 
     @GetMapping("products/followed/{userId}/list")
-    public ResponseEntity<?> getFollowedPosts(@PathVariable @Positive @NotNull Integer userId, @RequestParam(defaultValue = "date_asc", required = false) String order){
+    public ResponseEntity<?> getFollowedPosts(@PathVariable @Positive @NotNull Integer userId, @RequestParam( required = false) String order){
         return new ResponseEntity<>(this.postService.getPostsOrderedByDate(userId, order), HttpStatus.OK);
     }
 }

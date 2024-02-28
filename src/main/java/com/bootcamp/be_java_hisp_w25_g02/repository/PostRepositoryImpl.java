@@ -45,14 +45,14 @@ public class PostRepositoryImpl implements IPostRepository
     }
 
     @Override
-    public long savePost(Post post) {
+    public int savePost(Post post) {
         post.setPostId( postList.size());
         postList.add(post);
         return post.getPostId();
 }
     public List<Post> findByUserId(Integer userId) {
-        LocalDate twoWeeksAgo = LocalDate.now().minusWeeks(2);
-        return this.postList.stream().filter(post -> post.getPostDate().isAfter(twoWeeksAgo) && Objects.equals(post.getUserId(), userId)).toList();
-
+        LocalDate twoWeeksAgo = LocalDate.now().minusWeeks(2).minusDays(1);
+        LocalDate tomorrow = LocalDate.now().plusDays(1);
+        return this.postList.stream().filter(post -> post.getPostDate().isAfter(twoWeeksAgo) && post.getPostDate().isBefore(tomorrow) && Objects.equals(post.getUserId(), userId)).toList();
     }
 }
