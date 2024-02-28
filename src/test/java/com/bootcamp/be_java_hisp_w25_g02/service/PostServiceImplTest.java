@@ -46,7 +46,25 @@ class PostServiceImplTest {
         assertEquals(expectedResponse, actualResponse);
     }
     @Test
-    @DisplayName("T-005 - cumple - verificar tipo de ordenamiento (null)")
+    @DisplayName("T-005 - cumple - verificar tipo de ordenamiento (date_desc)")
+    void getPostOrderedByDateOrderTypeDescOKTest(){
+        //arrange
+        String order =  "date_desc";
+        Integer userId = 3;
+        when(userService.getFollowedUsersId(userId)).thenReturn(List.of(1));
+        when(iPostRepository.findByUserId(1)).thenReturn(
+                TestUtilGenerator.getPostsDisordered()
+        );
+        FollowingPostDTO expectedResponse = TestUtilGenerator.getFollowingPostOrderDesc();
+        //act
+        FollowingPostDTO actualResponse = postService.getPostsOrderedByDate(userId, order);
+        //assert
+        verify(iPostRepository, atLeast(1)).findByUserId(1);
+        verify(userService, atLeast(1)).getFollowedUsersId(userId);
+        assertEquals(expectedResponse, actualResponse);
+    }
+    @Test
+    @DisplayName("T-005-cumple-verificar tipo de ordenamiento (null)")
     void getPostOrderedByDateOrderTypeNullOKTest(){
         //arrange
         String order =  null;
