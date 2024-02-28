@@ -18,9 +18,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
+
 import java.util.List;
 import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 @SpringBootTest
@@ -30,6 +31,97 @@ class UserServiceImplTest {
     IUserRepository iUserRepository;
     @InjectMocks
     UserServiceImpl userServiceImpl;
+
+    @Test
+    @DisplayName("T-0001 - Follow user - Test ok")
+    void followUserTestOk() {
+        //Arange
+        Integer userId = 1;
+        Integer userIdToFollow = 10;
+        Optional<User> user = Optional.of(TestUtilGenerator.getUserWithFollowingSellers());
+        Optional<User> userToFollow = Optional.of(TestUtilGenerator.getUserSeller());
+
+        when(iUserRepository.findById(userId)).thenReturn(user);
+        when(iUserRepository.findById(userIdToFollow)).thenReturn(userToFollow);
+
+        //Act
+        userServiceImpl.followUser(userId, userIdToFollow);
+
+        //Assert
+        verify(iUserRepository, times(1)).findById(userId);
+        verify(iUserRepository, times(1)).findById(userIdToFollow);
+
+
+    }
+
+    @Test
+    @DisplayName("T-0001 - Follow user - Bad Request")
+    void followUserTestBadRequest() {
+        //Arrange
+        Integer userId = 1;
+        Integer userToFollowId = 3;
+        Optional<User> user = Optional.of(TestUtilGenerator.getUserWithFollowingSellers());
+        Optional<User> userToFollow = Optional.of(TestUtilGenerator.getUserNotSeller());
+
+        when(iUserRepository.findById(userId)).thenReturn(user);
+        when(iUserRepository.findById(userToFollowId)).thenReturn(userToFollow);
+
+        // Act + Assert
+        assertThrows(BadRequestException.class, () -> {
+            userServiceImpl.followUser(userId, userToFollowId);
+        });
+
+        verify(iUserRepository, times(1)).findById(userId);
+        verify(iUserRepository, times(1)).findById(userToFollowId);
+
+
+    }
+
+    @Test
+    @DisplayName("T-0002 - Unfollow user - Test ok")
+    void unfollowUserTestOk() {
+        //Arange
+        Integer userId = 1;
+        Integer userIdToUnfollow = 10;
+        Optional<User> user = Optional.of(TestUtilGenerator.getUserWithFollowingSellers());
+        Optional<User> userToUnfollow = Optional.of(TestUtilGenerator.getUserSeller());
+
+        when(iUserRepository.findById(userId)).thenReturn(user);
+        when(iUserRepository.findById(userIdToUnfollow)).thenReturn(userToUnfollow);
+
+        //Act
+        userServiceImpl.unfollowUser(userId, userIdToUnfollow);
+
+        //Assert
+        verify(iUserRepository, times(1)).findById(userId);
+        verify(iUserRepository, times(1)).findById(userIdToUnfollow);
+
+
+    }
+
+    @Test
+    @DisplayName("T-0002 - Unfollow user - Bad request")
+    void unfollowUserTestBadRequest() {
+        //Arange
+        Integer userId = 1;
+        Integer userIdToUnfollow = 15;
+        Optional<User> user = Optional.of(TestUtilGenerator.getUserWithFollowingSellers());
+        Optional<User> userToUnfollow = Optional.empty();
+
+        when(iUserRepository.findById(userId)).thenReturn(user);
+        when(iUserRepository.findById(userIdToUnfollow)).thenReturn(userToUnfollow);
+
+        // Act + Assert
+        assertThrows(BadRequestException.class, () -> {
+            userServiceImpl.unfollowUser(userId, userIdToUnfollow);
+        });
+
+        verify(iUserRepository, times(1)).findById(userId);
+        verify(iUserRepository, times(1)).findById(userIdToUnfollow);
+
+
+    }
+
 
     @Test
     @DisplayName("T-0003 - Alphabetical Followed Order Doesn't Exist")

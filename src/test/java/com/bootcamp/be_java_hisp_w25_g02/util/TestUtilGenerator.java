@@ -31,13 +31,22 @@ public class TestUtilGenerator {
                         7, 9
                 )), new ArrayList<>());
         }
-
         public static User followingUserId7() {
                 return new User(7, "Maria", true, new ArrayList<>(), new ArrayList<>());
         }
 
         public static User followingUserId9() {
                 return new User(9, "Malena", true, new ArrayList<>(), new ArrayList<>());
+        }
+
+        public static User getUserSeller() {
+        return new User(10, "JoseMaria", true, new ArrayList<>(), new ArrayList<>(
+                List.of()
+        ));
+        }
+
+        public static User getUserNotSeller() {
+            return new User(3, "Martin", false, new ArrayList<>(), new ArrayList<>());
         }
 
     public static List<Post> getPostsDisordered() {
