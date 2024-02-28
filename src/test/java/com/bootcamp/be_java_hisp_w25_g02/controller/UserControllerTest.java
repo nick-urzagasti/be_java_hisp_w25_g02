@@ -39,4 +39,34 @@ class UserControllerTest {
         verify(userService, atLeastOnce()).getFollowedSellers(id, order);
         assertEquals(expected, result);
     }
+
+    @Test
+    @DisplayName("T-0001 - followSeller - Test OK")
+    void followSellerTestOk() {
+        //Asset
+        Integer userId = 1;
+        Integer userIdToFollow = 7;
+        // Act
+        ResponseEntity<?> response = userController.followSeller(userId, userIdToFollow);
+
+        // Assert
+        verify(userService,  atLeastOnce()).followUser(userId, userIdToFollow);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+
+    }
+
+    @Test
+    @DisplayName("T-0002 - unfollowSeller - Test OK")
+    void unfollowSellerTestOk() {
+        //Assert
+        Integer userId = 1;
+        Integer userIdToUnfollow = 7;
+        // Act
+        ResponseEntity<?> response = userController.unfollowSeller(userId, userIdToUnfollow);
+
+        // Assert
+        verify(userService,  atLeastOnce()).unfollowUser(userId, userIdToUnfollow);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+
+    }
 }

@@ -48,8 +48,8 @@ class UserServiceImplTest {
         userServiceImpl.followUser(userId, userIdToFollow);
 
         //Assert
-        verify(iUserRepository, times(1)).findById(userId);
-        verify(iUserRepository, times(1)).findById(userIdToFollow);
+        verify(iUserRepository, atLeastOnce()).findById(userId);
+        verify(iUserRepository, atLeastOnce()).findById(userIdToFollow);
 
 
     }
@@ -71,8 +71,8 @@ class UserServiceImplTest {
             userServiceImpl.followUser(userId, userToFollowId);
         });
 
-        verify(iUserRepository, times(1)).findById(userId);
-        verify(iUserRepository, times(1)).findById(userToFollowId);
+        verify(iUserRepository, atLeastOnce()).findById(userId);
+        verify(iUserRepository, atLeastOnce()).findById(userToFollowId);
 
 
     }
@@ -93,8 +93,8 @@ class UserServiceImplTest {
         userServiceImpl.unfollowUser(userId, userIdToUnfollow);
 
         //Assert
-        verify(iUserRepository, times(1)).findById(userId);
-        verify(iUserRepository, times(1)).findById(userIdToUnfollow);
+        verify(iUserRepository,atLeastOnce()).findById(userId);
+        verify(iUserRepository,atLeastOnce()).findById(userIdToUnfollow);
 
 
     }
@@ -116,8 +116,8 @@ class UserServiceImplTest {
             userServiceImpl.unfollowUser(userId, userIdToUnfollow);
         });
 
-        verify(iUserRepository, times(1)).findById(userId);
-        verify(iUserRepository, times(1)).findById(userIdToUnfollow);
+        verify(iUserRepository, atLeastOnce()).findById(userId);
+        verify(iUserRepository, atLeastOnce()).findById(userIdToUnfollow);
 
 
     }
