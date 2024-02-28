@@ -3,7 +3,6 @@ import com.bootcamp.be_java_hisp_w25_g02.dto.request.PostDTO;
 import com.bootcamp.be_java_hisp_w25_g02.service.IPostService;
 import com.bootcamp.be_java_hisp_w25_g02.service.PostServiceImpl;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import org.springframework.http.HttpStatus;

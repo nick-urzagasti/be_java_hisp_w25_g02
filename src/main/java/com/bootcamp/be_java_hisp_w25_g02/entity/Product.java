@@ -1,6 +1,5 @@
 package com.bootcamp.be_java_hisp_w25_g02.entity;
 
-import jakarta.validation.constraints.NotBlank;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;

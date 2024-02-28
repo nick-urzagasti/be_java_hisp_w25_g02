@@ -9,7 +9,6 @@ import com.bootcamp.be_java_hisp_w25_g02.entity.Product;
 import com.bootcamp.be_java_hisp_w25_g02.dto.response.UserDTO;
 import com.bootcamp.be_java_hisp_w25_g02.dto.response.UserFollowingDTO;
 import com.bootcamp.be_java_hisp_w25_g02.entity.User;
-import org.springframework.lang.Nullable;
 
 import java.util.ArrayList;
 
