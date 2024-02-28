@@ -142,27 +142,12 @@ class UserServiceImplTest {
         // Arr
         String order = null;
 
-        List<Integer> list1 = List.of(1, 2, 3);
-        List<Integer> list2 = List.of(6, 7, 10);
-        User user1 = new User(5, "Matias Del Salvador", true, list1, list2);
+        User user1 = TestUtilGenerator.createUser1(); // Matias
+        User user2 = TestUtilGenerator.createUser2(); // Romina
+        User user3 = TestUtilGenerator.createUser3(); // Abel
+        User user4 = TestUtilGenerator.createUser4(); // jorge
 
-        List<Integer> list3 = List.of(1, 2, 3);
-        List<Integer> list4 = List.of(5, 7, 10);
-        User user2 = new User(6, "Romina Fuentes", true, list3, list4);
-
-        List<Integer> list5 = List.of(1, 2, 3);
-        List<Integer> list6 = List.of(5, 6, 10);
-        User user3 = new User(7, "Abel Gomez", true, list5, list6);
-
-        List<Integer> list8 = List.of(5, 6, 7);
-        List<Integer> list9 = List.of(5, 6, 7);
-        User user4 = new User(12, "Jorge Alba", true, list8, list9);
-
-        List<UserDTO> listOfUserDTOs = List.of(
-                new UserDTO(user1.getUserId(), user1.getUserName()),
-                new UserDTO(user2.getUserId(), user2.getUserName()),
-                new UserDTO(user3.getUserId(), user3.getUserName())
-        );
+        List<UserDTO> listOfUserDTOs = TestUtilGenerator.createFollowerDTOList(null);
 
         FollowerListDTO myAnsDTO = new FollowerListDTO(user4.getUserId(), user4.getUserName(), listOfUserDTOs);
         // Act
@@ -182,41 +167,26 @@ class UserServiceImplTest {
     @DisplayName("T0004 - When calling getFollowersList(), with 'order' param being 'name_asc' , the list is returned in order ascending by name.")
     public void getFollowersListTestOrderAsc(){
         // Arr
-        String order = null;
+        String order = "name_asc";
 
-        List<Integer> list1 = List.of(1, 2, 3);
-        List<Integer> list2 = List.of(6, 7, 10);
-        User user1 = new User(5, "Matias Del Salvador", true, list1, list2);
+        User user1 = TestUtilGenerator.createUser1(); // Matias
+        User user2 = TestUtilGenerator.createUser2(); // Romina
+        User user3 = TestUtilGenerator.createUser3(); // Abel
+        User user4 = TestUtilGenerator.createUser4(); // jorge
 
-        List<Integer> list3 = List.of(1, 2, 3);
-        List<Integer> list4 = List.of(5, 7, 10);
-        User user2 = new User(6, "Romina Fuentes", true, list3, list4);
-
-        List<Integer> list5 = List.of(1, 2, 3);
-        List<Integer> list6 = List.of(5, 6, 10);
-        User user3 = new User(7, "Abel Gomez", true, list5, list6);
-
-        List<Integer> list8 = List.of(5, 6, 7);
-        List<Integer> list9 = List.of(5, 6, 7);
-        User user4 = new User(12, "Jorge Alba", true, list8, list9);
-
-        List<UserDTO> listOfUserDTOs = List.of(
-                new UserDTO(user3.getUserId(), user3.getUserName()),
-                new UserDTO(user1.getUserId(), user1.getUserName()),
-                new UserDTO(user2.getUserId(), user2.getUserName())
-        );
+        List<UserDTO> listOfUserDTOs = TestUtilGenerator.createFollowerDTOList("name_asc");
 
         FollowerListDTO myAnsDTO = new FollowerListDTO(user4.getUserId(), user4.getUserName(), listOfUserDTOs);
         // Act
 
         when(iUserRepository.findById(anyInt())).thenReturn(
                 Optional.of(user4),
-                Optional.of(user3),
-                Optional.of(user1),
-                Optional.of(user2)
+                Optional.of(user3), // Abel
+                Optional.of(user1), // Matias
+                Optional.of(user2) // Romina
         );
         // Assert
-        Assertions.assertEquals(myAnsDTO, userServiceImpl.getFollowersList(12, null));
+        Assertions.assertEquals(myAnsDTO, userServiceImpl.getFollowersList(12, order));
     }
 
     @Test
@@ -224,41 +194,26 @@ class UserServiceImplTest {
     public void getFollowersListTestOrderDesc(){
 
         // Arr
-        String order = null;
+        String order = "name_desc";
 
-        List<Integer> list1 = List.of(1, 2, 3);
-        List<Integer> list2 = List.of(6, 7, 10);
-        User user1 = new User(5, "Matias Del Salvador", true, list1, list2);
+        User user1 = TestUtilGenerator.createUser1(); // Matias
+        User user2 = TestUtilGenerator.createUser2(); // Romina
+        User user3 = TestUtilGenerator.createUser3(); // Abel
+        User user4 = TestUtilGenerator.createUser4(); // jorge
 
-        List<Integer> list3 = List.of(1, 2, 3);
-        List<Integer> list4 = List.of(5, 7, 10);
-        User user2 = new User(6, "Romina Fuentes", true, list3, list4);
-
-        List<Integer> list5 = List.of(1, 2, 3);
-        List<Integer> list6 = List.of(5, 6, 10);
-        User user3 = new User(7, "Abel Gomez", true, list5, list6);
-
-        List<Integer> list8 = List.of(5, 6, 7);
-        List<Integer> list9 = List.of(5, 6, 7);
-        User user4 = new User(12, "Jorge Alba", true, list8, list9);
-
-        List<UserDTO> listOfUserDTOs = List.of(
-                new UserDTO(user2.getUserId(), user2.getUserName()),
-                new UserDTO(user1.getUserId(), user1.getUserName()),
-                new UserDTO(user3.getUserId(), user3.getUserName())
-        );
+        List<UserDTO> listOfUserDTOs = TestUtilGenerator.createFollowerDTOList("name_desc");
 
         FollowerListDTO myAnsDTO = new FollowerListDTO(user4.getUserId(), user4.getUserName(), listOfUserDTOs);
         // Act
 
         when(iUserRepository.findById(anyInt())).thenReturn(
-                Optional.of(user4),
-                Optional.of(user2),
+                Optional.of(user4), // Jorge no se agrega a la lista de sus propios seguidores, no necesitamos aqui para simular buscarlo por ID
+                Optional.of(user2), // Agregamos los usuarios en la lista de jorge en orden correspondeiente.
                 Optional.of(user1),
                 Optional.of(user3)
         );
         // Assert
-        Assertions.assertEquals(myAnsDTO, userServiceImpl.getFollowersList(12, null));
+        Assertions.assertEquals(myAnsDTO, userServiceImpl.getFollowersList(12, order));
     }
 
     @Test
