@@ -12,7 +12,7 @@ public interface IPostRepository {
 
     Optional<Product> findProductById(int id);
 
-    long savePost(Post post);
+    int savePost(Post post);
     List<Post> findByUserId(Integer userId);
 
 }
