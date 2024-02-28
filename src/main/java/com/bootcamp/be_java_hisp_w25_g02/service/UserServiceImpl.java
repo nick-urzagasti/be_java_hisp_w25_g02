@@ -123,11 +123,10 @@ public class UserServiceImpl implements IUserService{
     public FollowerListDTO getFollowersList(Integer userId, String order) {
 
         // Excepciones en caso de que el parámetro no coincida (ignorecase) con "name_asc" o "name_desc"
-        if (!order.equalsIgnoreCase("name_asc") && !order.equalsIgnoreCase("name_desc")){
+        if (order != null && !order.equalsIgnoreCase("name_asc") && !order.equalsIgnoreCase("name_desc")){
             throw new BadRequestException("El valor de ordenamiento '" + order + "' no es válido. Los valores permitidos son: 'name_asc' y 'name_desc'.");
         }
         Optional<User> user = userRepository.findById(userId);
-        System.out.println("lestoy acá");
         if (user.isEmpty()) throw new NotFoundException("No hay usuario asociado a esa ID");
         if (!user.get().getSeller()) throw new BadRequestException("Este usuario no es vendedor, no puede poseer seguidores.");
         List<Integer> followersIdList = user.get().getFollowedBy();
@@ -137,11 +136,13 @@ public class UserServiceImpl implements IUserService{
 
         // Aquí lógica de ordenamiento
         // Lógica de ordenamiento asc y desc.
-        if (order.equalsIgnoreCase("name_asc")){
-            followersList = followersList.stream().sorted(Comparator.comparing(UserDTO::userName)).toList();
-        }
-        if (order.equalsIgnoreCase("name_desc")){
-            followersList = followersList.stream().sorted(Comparator.comparing(UserDTO::userName).reversed()).toList();
+        if (order != null) {
+            if (order.equalsIgnoreCase("name_asc")){
+                followersList = followersList.stream().sorted(Comparator.comparing(UserDTO::userName)).toList();
+            }
+            if (order.equalsIgnoreCase("name_desc")){
+                followersList = followersList.stream().sorted(Comparator.comparing(UserDTO::userName).reversed()).toList();
+            }
         }
         FollowerListDTO ansDTO = new FollowerListDTO(userId, user.get().getUserName(), followersList);
         return ansDTO;
