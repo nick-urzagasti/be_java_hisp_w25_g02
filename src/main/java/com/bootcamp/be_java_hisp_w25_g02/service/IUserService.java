@@ -1,6 +1,5 @@
 package com.bootcamp.be_java_hisp_w25_g02.service;
 import com.bootcamp.be_java_hisp_w25_g02.dto.response.UserDTO;
-import com.bootcamp.be_java_hisp_w25_g02.entity.User;
 import com.bootcamp.be_java_hisp_w25_g02.dto.response.UserFollowingDTO;
 import com.bootcamp.be_java_hisp_w25_g02.dto.response.FollowerListDTO;
 import java.util.List;
