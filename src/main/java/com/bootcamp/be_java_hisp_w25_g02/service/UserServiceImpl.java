@@ -50,6 +50,14 @@ public class UserServiceImpl implements IUserService{
             return false;
         }
     }
+
+    @Override
+    public UserDTO makeSeller(Integer id) {
+        Optional<User> user = this.userRepository.findById(id);
+        user.ifPresent(value -> value.setSeller(true));
+        return userToUserDto(user.get());
+    }
+
     @Override
     public List<Integer> getFollowedUsersId(Integer userId) {
         Optional<User> user = this.userRepository.findById(userId);
@@ -69,15 +77,13 @@ public class UserServiceImpl implements IUserService{
                     .map(userRepository::findById)
                     .map(usr -> new UserDTO(usr.get().getUserId(), usr.get().getUserName())).toList();
             if (order != null && order.equalsIgnoreCase("name_asc")) {
-                // Agregar excepcion en caso de que no exista
                 followingUserIdList = followingUserIdList.stream().sorted(Comparator.comparing(UserDTO::userName)).toList();
             }
-            // if (order != null && !order.equalsIgnoreCase("name_asc") && !order.equalsIgnoreCase("name_desc")) {
-            //     agregar excepcion
-            // }
             if (order != null && order.equalsIgnoreCase("name_desc")) {
-                // Agregar excepcion en caso de que no exista
                 followingUserIdList = followingUserIdList.stream().sorted(Comparator.comparing(UserDTO::userName).reversed()).toList();
+            }
+            if (order != null && !order.equalsIgnoreCase("name_asc") && !order.equalsIgnoreCase("name_desc")) {
+                throw new BadRequestException("El valor de ordenamiento '" + order + "' no es válido. Los valores permitidos son: 'name_asc' y 'name_desc'.");
             }
             return new UserFollowingDTO(user.get().getUserId(), user.get().getUserName(), followingUserIdList);
         } else {
@@ -121,6 +127,11 @@ public class UserServiceImpl implements IUserService{
 
     @Override
     public FollowerListDTO getFollowersList(Integer userId, String order) {
+
+        // Excepciones en caso de que el parámetro no coincida (ignorecase) con "name_asc" o "name_desc"
+        if (order != null && !order.equalsIgnoreCase("name_asc") && !order.equalsIgnoreCase("name_desc")){
+            throw new BadRequestException("El valor de ordenamiento '" + order + "' no es válido. Los valores permitidos son: 'name_asc' y 'name_desc'.");
+        }
         Optional<User> user = userRepository.findById(userId);
         if (user.isEmpty()) throw new NotFoundException("No hay usuario asociado a esa ID");
         if (!user.get().getSeller()) throw new BadRequestException("Este usuario no es vendedor, no puede poseer seguidores.");
@@ -128,12 +139,16 @@ public class UserServiceImpl implements IUserService{
         if (followersIdList.isEmpty()) throw new NotFoundException("El usuario no posee seguidores");
         List<UserDTO> followersList = followersIdList.stream().map(userRepository::findById)
                 .map(userA -> new UserDTO(userA.get().getUserId(), userA.get().getUserName())).toList();
-        // Aquí lógica de ordenamiento si hay orden
-        if (order != null && order.equalsIgnoreCase("name_asc")){
-            followersList = followersList.stream().sorted(Comparator.comparing(UserDTO::userName)).toList();
-        }
-        if (order != null && order.equalsIgnoreCase("name_desc")){
-            followersList = followersList.stream().sorted(Comparator.comparing(UserDTO::userName).reversed()).toList();
+
+        // Aquí lógica de ordenamiento
+        // Lógica de ordenamiento asc y desc.
+        if (order != null) {
+            if (order.equalsIgnoreCase("name_asc")){
+                followersList = followersList.stream().sorted(Comparator.comparing(UserDTO::userName)).toList();
+            }
+            if (order.equalsIgnoreCase("name_desc")){
+                followersList = followersList.stream().sorted(Comparator.comparing(UserDTO::userName).reversed()).toList();
+            }
         }
         FollowerListDTO ansDTO = new FollowerListDTO(userId, user.get().getUserName(), followersList);
         return ansDTO;
