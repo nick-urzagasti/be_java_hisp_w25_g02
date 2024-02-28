@@ -290,6 +290,54 @@ public class TestUtilGenerator {
                 )
                 );
     }
+    public static List<PostDTO> getPostsDTOOrderByDateDesc(Integer userID) {
+        return List.of(
+
+                new PostDTO(
+                        userID,
+                        LocalDate.now(),
+                        new ProductDTO(
+                                2,
+                                "Prod2",
+                                "tipo2",
+                                "brand2",
+                                "color2",
+                                "notes"
+                        ),
+                        11,
+                        11.0
+                ),
+                new PostDTO(
+                        userID,
+                        LocalDate.now().minusDays(1),
+                        new ProductDTO(
+                                1,
+                                "Prod1",
+                                "tipo1",
+                                "brand1",
+                                "color1",
+                                "notes"
+                        ),
+                        12,
+                        10.0
+
+                ),
+                new PostDTO(
+                        userID,
+                        LocalDate.now().minusDays(2),
+                        new ProductDTO(
+                                1,
+                                "Prod1",
+                                "tipo1",
+                                "brand1",
+                                "color1",
+                                "notes"
+                        ),
+                        12,
+                        10.0
+                )
+        );
+    }
 
     public static FollowingPostDTO getFollowingPostOrderAsc() {
         return new FollowingPostDTO(
@@ -496,6 +544,22 @@ public class TestUtilGenerator {
 
         return listOfUserDTOs;
     }
+    public static PostDTO getPostWithUserID(Integer userId){
+            return new PostDTO(
+                    userId,
+                    LocalDate.now(),
+                    new ProductDTO(
+                            1234572187,
+                            "Prod1",
+                            "tipo1",
+                            "brand1",
+                            "color1",
+                            "notes"
+                    ),
+                    12,
+                    10.0
 
+            );
+    }
 
 }
