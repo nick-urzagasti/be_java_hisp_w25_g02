@@ -323,4 +323,66 @@ public class TestUtilGenerator {
         );
     }
 
+    public static User createUser1() {
+        List<Integer> list1 = List.of(1, 2, 3);
+        List<Integer> list2 = List.of(6, 7, 10);
+        return new User(5, "Matias Del Salvador", true, list1, list2);
+    }
+    public static User createUser2(){
+        List<Integer> list3 = List.of(1, 2, 3);
+        List<Integer> list4 = List.of(5, 7, 10);
+        return new User(6, "Romina Fuentes", true, list3, list4);
+    }
+
+    public static User createUser3(){
+        List<Integer> list5 = List.of(1, 2, 3);
+        List<Integer> list6 = List.of(5, 6, 10);
+        return new User(7, "Abel Gomez", true, list5, list6);
+    }
+
+    public static User createUser4(){
+        List<Integer> list8 = List.of(5, 6, 7);
+        List<Integer> list9 = List.of(5, 6, 7);
+        return new User(12, "Jorge Alba", true, list8, list9);
+    }
+
+    public static List<UserDTO> createFollowerDTOList(String order){
+
+        List<UserDTO> listOfUserDTOs = new ArrayList<>();
+
+        User user1 = createUser1();
+        User user2 = createUser2();
+        User user3 = createUser3();
+
+        UserDTO userDTO1 = new UserDTO(user1.getUserId(), user1.getUserName());
+        UserDTO userDTO2 = new UserDTO(user2.getUserId(), user2.getUserName());
+        UserDTO userDTO3 = new UserDTO(user3.getUserId(), user3.getUserName());
+
+        if (order != null) {
+            switch(order) {
+                case "name_asc":
+                    listOfUserDTOs.add(userDTO3);
+                    listOfUserDTOs.add(userDTO1);
+                    listOfUserDTOs.add(userDTO2);
+                    break;
+                case "name_desc":
+                    listOfUserDTOs.add(userDTO2);
+                    listOfUserDTOs.add(userDTO1);
+                    listOfUserDTOs.add(userDTO3);
+                    break;
+                default:
+                    listOfUserDTOs.add(userDTO1);
+                    listOfUserDTOs.add(userDTO2);
+                    listOfUserDTOs.add(userDTO3);
+            }
+        } else {
+            listOfUserDTOs.add(userDTO1);
+            listOfUserDTOs.add(userDTO2);
+            listOfUserDTOs.add(userDTO3);
+        }
+
+
+        return listOfUserDTOs;
+    }
+
 }
