@@ -50,5 +50,16 @@ public class UserRepositoryImpl implements IUserRepository{
         return this.userList;
     }
 
+    @Override
+    public Integer saveUser(User user) {
+        Integer userId = this.userList.size();
+        while (this.findById(userId).isPresent()){
+            userId++;
+        }
+        user.setUserId(userId);
+        this.userList.add(user);
+        return userId;
+    }
+
 
 }

@@ -11,5 +11,5 @@ public interface IUserRepository {
 
 
     List<User> findAll();
-
+    Integer saveUser(User user);
 }
