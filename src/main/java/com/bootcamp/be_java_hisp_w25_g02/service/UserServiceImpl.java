@@ -35,7 +35,7 @@ public class UserServiceImpl implements IUserService{
         if(user.isPresent()){
             return new FollowerCountDTO(user.get().getUserId(),
                     user.get().getUserName(),
-                    user.get().getFollowing().stream().count());
+                    (long) user.get().getFollowedBy().size());
         } else {
             throw new BadRequestException("No encontrado el user con ese ID");
         }
