@@ -75,6 +75,36 @@ public class ProductControllerIntegrationTest {
         assertEquals(expectedResponseString, mvcResult.getResponse().getContentAsString(StandardCharsets.UTF_8));
     }
     @Test
+    @DisplayName("IntegrationTest - order asc")
+    public void getFollowedPostsTestUserIdNotPositiveOk() throws Exception {
+        //arrange
+        Integer userSellerId = userRepository.saveUser(TestUtilGenerator.getUserToFollow());
+        User userSeller = TestUtilGenerator.getUserToFollow();
+        userSeller.setUserId(userSellerId);
+        User userNoSeller = TestUtilGenerator.getUserWithoutFollowed();
+        userNoSeller.setFollowing(List.of(userSellerId));
+        userRepository.saveUser(userNoSeller);
+        List<Post> posts = TestUtilGenerator.getPostsOfUserDisordered(userSellerId);
+        postRepository.savePost(posts.get(0));
+        postRepository.savePost(posts.get(1));
+        postRepository.savePost(posts.get(2));
+        FollowingPostDTO expectedResponse = new FollowingPostDTO(
+                userNoSeller.getUserId(),
+                TestUtilGenerator.getPostsDTOOrderByDateAsc(userSellerId)
+        );
+        String expectedResponseString = writer.writeValueAsString(expectedResponse);
+        //act
+        MvcResult mvcResult = mockMvc
+                .perform(get("/products/followed/{userId}/list", 0)
+                        .param("order", "date_asc"))
+                .andDo(print())
+                .andExpect(content().contentType("application/json"))
+                .andExpect(status().isOk())
+                .andReturn();
+        //assert
+        assertEquals(expectedResponseString, mvcResult.getResponse().getContentAsString(StandardCharsets.UTF_8));
+    }
+    @Test
     @DisplayName("IntegrationTest - order desc")
     public void getFollowedPostsDescTestOk() throws Exception {
         //arrange
@@ -173,7 +203,7 @@ public class ProductControllerIntegrationTest {
     void createPostWithUserId0() throws Exception {
         Integer userId0 = 0;
         PostDTO postToBeCreated = TestUtilGenerator.getPostWithUserID(userId0);
-        GenericResponseDTO expectedResponse = new GenericResponseDTO("Validation failed for argument [0] in public org.springframework.http.ResponseEntity<?> com.bootcamp.be_java_hisp_w25_g02.controller.ProductController.savePost(com.bootcamp.be_java_hisp_w25_g02.dto.request.PostDTO): [Field error in object 'postDTO' on field 'userId': rejected value [0]; codes [Min.postDTO.userId,Min.userId,Min.java.lang.Integer,Min]; arguments [org.springframework.context.support.DefaultMessageSourceResolvable: codes [postDTO.userId,userId]; arguments []; default message [userId],1]; default message [El id de usuario debe ser mayor a 0]] ");
+        GenericResponseDTO expectedResponse = new GenericResponseDTO("El id de usuario debe ser mayor a 0");
         String expectedResponseString = writer.writeValueAsString(expectedResponse);
         //act
         MvcResult actualResponse = mockMvc.perform(post("/products/post")
@@ -189,6 +219,7 @@ public class ProductControllerIntegrationTest {
     @Test
     @DisplayName("IntegrationTest Us05 crear post sin post")
     void createPostWithoutAPost() throws Exception {
+
         PostDTO postToBeCreated = null;
 
         //act
