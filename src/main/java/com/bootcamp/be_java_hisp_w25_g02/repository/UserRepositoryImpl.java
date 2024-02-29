@@ -22,7 +22,8 @@ public class UserRepositoryImpl implements IUserRepository{
                 new User(8, "Marcos", false, new ArrayList<>(), new ArrayList<>()),
                 new User(9, "Malena", true, new ArrayList<>(), new ArrayList<>(List.of(1, 3, 7))),
                 new User(10, "JoseMaria", true, new ArrayList<>(), new ArrayList<>(List.of(1))),
-                new User(11, "Pedro Gomez", true, new ArrayList<>(), new ArrayList<>())
+                new User(11, "Pedro Gomez", true, new ArrayList<>(), new ArrayList<>()),
+                new User(12, "Juan", false, new ArrayList<>(List.of(10,11)), new ArrayList<>())
         ));
     }
 

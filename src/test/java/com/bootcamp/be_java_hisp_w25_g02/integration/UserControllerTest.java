@@ -1,5 +1,7 @@
 package com.bootcamp.be_java_hisp_w25_g02.integration;
 
+import com.bootcamp.be_java_hisp_w25_g02.dto.response.FollowerCountDTO;
+import com.bootcamp.be_java_hisp_w25_g02.dto.response.FollowerListDTO;
 import com.bootcamp.be_java_hisp_w25_g02.dto.response.UserFollowingDTO;
 import com.bootcamp.be_java_hisp_w25_g02.util.TestUtilGenerator;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -28,14 +30,15 @@ public class UserControllerTest {
     @Autowired
     MockMvc mockMvc;
 
+    ObjectWriter writer = new ObjectMapper().configure(SerializationFeature.WRAP_ROOT_VALUE, false).writer();
+
     @Test
-    @DisplayName("Individual - getFollowedSellers Integration Test")
+    @DisplayName("Individual - getFollowedSellers - Integration Test")
     void getFollowedSellersOK() throws Exception {
         // Arrange
-        Integer id = 1;
-        ObjectWriter writer = new ObjectMapper().configure(SerializationFeature.WRAP_ROOT_VALUE, false).writer();
+        Integer id = 12;
 
-        UserFollowingDTO responseDTO = TestUtilGenerator.getCorrectDescUserFollowingDTO();
+        UserFollowingDTO responseDTO = TestUtilGenerator.getCorrectAscUserFollowingDTO_id12();
 
         String expectedJson = writer.writeValueAsString(responseDTO);
 
@@ -51,7 +54,7 @@ public class UserControllerTest {
     }
 
     @Test
-    @DisplayName("Individual Bonus - followSeller Integration Test")
+    @DisplayName("Individual Bonus - followSeller - Integration Test")
     void followSellerOK() throws Exception {
         // Arrange
         Integer userId = 1;
@@ -64,7 +67,7 @@ public class UserControllerTest {
     }
 
     @Test
-    @DisplayName("Individual Bonus - unfollowSeller Integration Test")
+    @DisplayName("Individual Bonus - unfollowSeller - Integration Test")
     void unfollowSellerOK() throws Exception {
         // Arrange
         Integer userId = 1;
@@ -74,5 +77,43 @@ public class UserControllerTest {
         mockMvc.perform(post("/users/{userId}/unfollow/{userIdToFollow}", userId, userIdToFollow))
                 .andDo(print())
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    @DisplayName("Individual Bonus - getFollowersList - Integration Test")
+    void getFollowersList() throws Exception {
+        // Arrange
+        Integer id = 7;
+        FollowerListDTO expected = TestUtilGenerator.getFollowerListDTOId7();
+        String expectedJson = writer.writeValueAsString(expected);
+
+        // Act
+        MvcResult result = mockMvc.perform(get("/user/{userId}/followers", id))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/json"))
+                .andReturn();
+
+        // Assert
+        assertEquals(expectedJson, result.getResponse().getContentAsString(StandardCharsets.UTF_8));
+    }
+
+    @Test
+    @DisplayName("Individual Bonus - getUserTotalFollowers - Integration Test")
+    void getUserTotalFollowers() throws Exception {
+        // Arrange
+        Integer id = 7;
+        FollowerCountDTO expected = TestUtilGenerator.getCorrectFollowerCountDTOId1();
+        String expectedJson = writer.writeValueAsString(expected);
+
+        // Act
+        MvcResult result = mockMvc.perform(get("/users/{userId}/followers/count", id))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/json"))
+                .andReturn();
+
+        // Assert
+        assertEquals(expectedJson, result.getResponse().getContentAsString(StandardCharsets.UTF_8));
     }
 }

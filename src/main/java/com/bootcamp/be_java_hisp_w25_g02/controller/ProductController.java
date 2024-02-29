@@ -20,17 +20,17 @@ import org.springframework.web.bind.annotation.RestController;
 public class ProductController {
 
     private IPostService postService;
-    public ProductController(PostServiceImpl postService){
 
+    public ProductController(PostServiceImpl postService){
         this.postService = postService;
     }
   
-    @PostMapping("products/post")
+    @PostMapping("/products/post")
     public ResponseEntity<?> savePost(@RequestBody @Valid PostDTO post) {
         return new ResponseEntity<>(this.postService.savePost(post), HttpStatus.OK);
     }
 
-    @GetMapping("products/followed/{userId}/list")
+    @GetMapping("/products/followed/{userId}/list")
     public ResponseEntity<?> getFollowedPosts(@PathVariable @Positive @NotNull Integer userId, @RequestParam( required = false) String order){
         return new ResponseEntity<>(this.postService.getPostsOrderedByDate(userId, order), HttpStatus.OK);
     }

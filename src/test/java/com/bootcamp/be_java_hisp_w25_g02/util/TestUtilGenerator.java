@@ -1,15 +1,13 @@
 package com.bootcamp.be_java_hisp_w25_g02.util;
 
 import com.bootcamp.be_java_hisp_w25_g02.dto.request.PostDTO;
-import com.bootcamp.be_java_hisp_w25_g02.dto.response.FollowingPostDTO;
-import com.bootcamp.be_java_hisp_w25_g02.dto.response.ProductDTO;
+import com.bootcamp.be_java_hisp_w25_g02.dto.response.*;
 import com.bootcamp.be_java_hisp_w25_g02.entity.Post;
 import com.bootcamp.be_java_hisp_w25_g02.entity.Product;
 
-import com.bootcamp.be_java_hisp_w25_g02.dto.response.UserDTO;
-import com.bootcamp.be_java_hisp_w25_g02.dto.response.UserFollowingDTO;
 import com.bootcamp.be_java_hisp_w25_g02.entity.User;
 
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 import java.time.LocalDate;
@@ -26,6 +24,11 @@ public class TestUtilGenerator {
                         List.of(new UserDTO(7, "Maria"), new UserDTO(9, "Malena")));
         }
 
+        public static UserFollowingDTO getCorrectAscUserFollowingDTO_id12() {
+            return new UserFollowingDTO(12, "Juan",
+                    List.of(new UserDTO(10, "JoseMaria"), new UserDTO(11, "Pedro Gomez")));
+        }
+
         public static User getUserWithFollowingSellers() {
                 return new User(1, "Javier", false, new ArrayList<>(List.of(
                         7, 9
@@ -39,10 +42,72 @@ public class TestUtilGenerator {
                 return new User(9, "Malena", true, new ArrayList<>(), new ArrayList<>());
         }
 
+        public static FollowerListDTO getFollowerListDTOId7() {
+            return new FollowerListDTO(7, "Maria", List.of(new UserDTO(1, "Javier")));
+        }
+
+        public static FollowerCountDTO getCorrectFollowerCountDTOId1() {
+            return new FollowerCountDTO(7, "Maria", 0L);
+        }
+
+        public static GenericResponseDTO getSavedPostGenericResponseDTO(Integer id) {
+            return new GenericResponseDTO("Post creado con exito con el id: " + id);
+        }
+
+        public static PostDTO getSavingPostDTO() {
+            return new PostDTO(9, LocalDate.of(2024, 2, 29),
+                    new ProductDTO(
+                            8,
+                            "Silla Gamer",
+                            "Gamer",
+                            "Racer",
+                            "Red & Black",
+                            "Special Edition"
+                    ),
+                    100,
+                    1500.50
+            );
+        }
+
+        public static FollowingPostDTO getFollowingPostDTOForId12() {
+            return new FollowingPostDTO(12, List.of(
+                    new PostDTO(
+                            10,
+                            LocalDate.of(2024, 2, 18),
+                            new ProductDTO(
+                                    5,
+                                    "Gafas gamer",
+                                    "Informática",
+                                    "Logitech",
+                                    "Verde",
+                                    "Lorem ipsum"
+                            ),
+                            5,
+                            6500.0
+                    ),
+                    new PostDTO(
+                            11,
+                            LocalDate.of(2024, 2, 18),
+                            new ProductDTO(
+                                    6,
+                                    "MackBook Pro",
+                                    "Informática",
+                                    "Apple",
+                                    "Space Gray",
+                                    "Lorem ipsum"
+                            ),
+                            6,
+                            16500.0
+                    )
+            ));
+        }
+
+        // ---
+
         public static User getUserSeller() {
         return new User(10, "JoseMaria", true, new ArrayList<>(), new ArrayList<>(
-                List.of()
-        ));
+                List.of())
+            );
         }
 
         public static User getUserNotSeller() {
