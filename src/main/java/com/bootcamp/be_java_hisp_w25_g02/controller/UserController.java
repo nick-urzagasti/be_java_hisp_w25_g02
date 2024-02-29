@@ -5,7 +5,6 @@ import com.bootcamp.be_java_hisp_w25_g02.dto.response.FollowerListDTO;
 import com.bootcamp.be_java_hisp_w25_g02.dto.response.UserFollowingDTO;
 import com.bootcamp.be_java_hisp_w25_g02.service.IUserService;
 import com.bootcamp.be_java_hisp_w25_g02.service.UserServiceImpl;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
