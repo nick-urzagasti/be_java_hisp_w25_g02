@@ -19,7 +19,7 @@ class PostRepositoryImplTest {
         postRepository = new PostRepositoryImpl();
     }
     @Test
-    @DisplayName("T008 - Consultas de las ultimas dos semanas")
+    @DisplayName("T-008 - the posts are from the last two weeks only - TestOK")
     void findByUserIdLastTwoWeeks(){
         //assert
         List<Post> postsOfTwoWeeksAndBeyond = TestUtilGenerator.getPostsOfLimitTwoWeeks();
