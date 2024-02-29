@@ -37,7 +37,7 @@ public class UserController {
     }
 
     @PostMapping("/users/{userId}/unfollow/{userIdToUnfollow}")
-    public ResponseEntity<?> unfollowSeller(@PathVariable @Positive(message = "El Id de usuario debe ser un numero positivo")  Integer userId, @PathVariable @Positive Integer userIdToUnfollow) {
+    public ResponseEntity<?> unfollowSeller(@PathVariable @Positive(message = "El Id de usuario debe ser un numero positivo")  Integer userId, @PathVariable @Positive(message = "El Id de usuario debe ser un numero positivo")  Integer userIdToUnfollow) {
         userService.unfollowUser(userId, userIdToUnfollow);
         return new ResponseEntity<>(HttpStatus.OK);
     }
