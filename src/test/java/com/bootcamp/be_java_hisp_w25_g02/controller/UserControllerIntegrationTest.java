@@ -1,10 +1,12 @@
 package com.bootcamp.be_java_hisp_w25_g02.controller;
 
+import com.bootcamp.be_java_hisp_w25_g02.dto.response.FollowerCountDTO;
 import com.bootcamp.be_java_hisp_w25_g02.dto.response.FollowerListDTO;
 import com.bootcamp.be_java_hisp_w25_g02.dto.response.UserDTO;
 import com.bootcamp.be_java_hisp_w25_g02.entity.User;
 import com.bootcamp.be_java_hisp_w25_g02.repository.IUserRepository;
 import com.bootcamp.be_java_hisp_w25_g02.util.TestUtilGenerator;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -102,6 +104,26 @@ class UserControllerIntegrationTest {
                 .andExpect(status().isOk());
 
     }
-
+    @Test
+    @DisplayName("IntegrationTest US-0002 - obtener cantidad de seguidores de un usuario")
+    void getFollowersCount() throws Exception {
+        //arrange
+        User userWithFollowers = TestUtilGenerator.getUserSeller();
+        userWithFollowers.getFollowedBy().add(1);
+        userWithFollowers.getFollowedBy().add(2);
+        userWithFollowers.getFollowedBy().add(3);
+        Integer userWithFollowersId = userRepository.saveUser(userWithFollowers);
+        Long followersQuantity = 3L;
+        FollowerCountDTO expectedResponse = new FollowerCountDTO(userWithFollowersId, userWithFollowers.getUserName(), followersQuantity);
+        String expectedResponseString = writer.writeValueAsString(expectedResponse);
+        //act
+        MvcResult actualResponse = mockMvc.perform(get("/users/{userId}/followers/count", userWithFollowersId))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andReturn();
+        //assert
+        assertEquals(expectedResponseString, actualResponse.getResponse().getContentAsString(StandardCharsets.UTF_8));
+    }
 
 }
