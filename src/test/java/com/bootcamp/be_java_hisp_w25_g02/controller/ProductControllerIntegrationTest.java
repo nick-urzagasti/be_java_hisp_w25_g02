@@ -43,6 +43,100 @@ class ProductControllerIntegrationTest {
     @Autowired
     IUserRepository userRepository;
 
+    @Test
+    @DisplayName("IntegrationTest US-0005- Crear un post OK")
+    void createPostOK() throws Exception {
+        //arrange
+        Integer userSellerId = userRepository.saveUser(TestUtilGenerator.getUserToFollow());
+        PostDTO postToBeCreated = TestUtilGenerator.getPostWithUserID(userSellerId);
+        //act
+        mockMvc.perform(post("/products/post")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(writer.writeValueAsString(postToBeCreated)))
+                .andDo(print())
+                .andExpect(content().contentType("application/json"))
+                .andExpect(status().isOk())
+                .andReturn();
+
+    }
+
+    @Test
+    @DisplayName("IntegrationTest US-0005- Crear un post por primera vez (se vuelve vendedor) OK")
+    void createPostFirstTimeOK() throws Exception {
+        //arrange
+        Integer userSellerId = userRepository.saveUser(TestUtilGenerator.getUserWithoutFollowed());
+        PostDTO postToBeCreated = TestUtilGenerator.getPostWithUserID(userSellerId, 124151);
+
+
+        //act
+        mockMvc.perform(post("/products/post")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(writer.writeValueAsString(postToBeCreated)))
+                .andDo(print())
+                .andExpect(content().contentType("application/json"))
+                .andExpect(status().isOk())
+                .andReturn();
+
+    }
+
+    @Test
+    @DisplayName("IntegrationTest US-0005- usuario no existe al crear post")
+    void createPostUserDoesntExistsTest() throws Exception {
+        //arrange
+        Integer userNoExistentId = 120;
+        while (userRepository.findById(userNoExistentId).isPresent()) {
+            userNoExistentId++;
+        }
+        PostDTO postToBeCreated = TestUtilGenerator.getPostWithUserID(userNoExistentId);
+        GenericResponseDTO expectedResponse = new GenericResponseDTO("El usuario no existe");
+        String expectedResponseString = writer.writeValueAsString(expectedResponse);
+        //act
+        MvcResult actualResponse = mockMvc.perform(post("/products/post")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(writer.writeValueAsString(postToBeCreated)))
+                .andDo(print())
+                .andExpect(content().contentType("application/json"))
+                .andExpect(status().isBadRequest())
+                .andReturn();
+        //assert
+        assertEquals(expectedResponseString, actualResponse.getResponse().getContentAsString(StandardCharsets.UTF_8));
+    }
+
+    @Test
+    @DisplayName("IntegrationTest US-0005- crearPost con userId menor a 1")
+    void createPostWithUserId0() throws Exception {
+        //arrange
+        Integer userId0 = 0;
+        PostDTO postToBeCreated = TestUtilGenerator.getPostWithUserID(userId0);
+        GenericResponseDTO expectedResponse = new GenericResponseDTO("El id de usuario debe ser mayor a 0");
+        String expectedResponseString = writer.writeValueAsString(expectedResponse);
+        //act
+        MvcResult actualResponse = mockMvc.perform(post("/products/post")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(writer.writeValueAsString(postToBeCreated)))
+                .andDo(print())
+                .andExpect(content().contentType("application/json"))
+                .andExpect(status().isBadRequest())
+                .andReturn();
+        //assert
+        assertEquals(expectedResponseString, actualResponse.getResponse().getContentAsString(StandardCharsets.UTF_8));
+    }
+
+    @Test
+    @DisplayName("IntegrationTest US-0005- crear post sin post (null)")
+    void createPostWithoutAPost() throws Exception {
+        //arrange
+        PostDTO postToBeCreated = null;
+        //act
+        mockMvc.perform(post("/products/post")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(writer.writeValueAsString(postToBeCreated)))
+                .andDo(print())
+                .andExpect(content().contentType("application/json"))
+                .andExpect(status().isBadRequest())
+                .andReturn();
+    }
+
 
     @Test
     @DisplayName("IntegrationTest US-0006- listado de posts order asc")
@@ -151,12 +245,13 @@ class ProductControllerIntegrationTest {
         //assert
         assertEquals(expectedResponseString, actualResponse.getResponse().getContentAsString(StandardCharsets.UTF_8));
     }
+
     @Test
     @DisplayName("IntegrationTest US-0006- usuario no existe")
     void getFollowedPostsUserDoesntExists() throws Exception {
         //arrange
         Integer userIdNonExistent = 120;
-        while (userRepository.findById(userIdNonExistent).isPresent()){
+        while (userRepository.findById(userIdNonExistent).isPresent()) {
             userIdNonExistent++;
         }
         GenericResponseDTO expectedResponse = new GenericResponseDTO("El usuario no existe");
@@ -172,96 +267,5 @@ class ProductControllerIntegrationTest {
         //assert
         assertEquals(expectedResponseString, actualResponse.getResponse().getContentAsString(StandardCharsets.UTF_8));
     }
-    @Test
-    @DisplayName("IntegrationTest US-0005- Crear un post OK")
-    void createPostOK() throws Exception {
-        //arrange
-        Integer userSellerId = userRepository.saveUser(TestUtilGenerator.getUserToFollow());
-        PostDTO postToBeCreated = TestUtilGenerator.getPostWithUserID(userSellerId);
-        //act
-        mockMvc.perform(post("/products/post")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(writer.writeValueAsString(postToBeCreated)))
-                .andDo(print())
-                .andExpect(content().contentType("application/json"))
-                .andExpect(status().isOk())
-                .andReturn();
 
-    }
-    @Test
-    @DisplayName("IntegrationTest US-0005- Crear un post por primera vez (se vuelve vendedor) OK")
-    void createPostFirstTimeOK() throws Exception {
-        //arrange
-        Integer userSellerId = userRepository.saveUser(TestUtilGenerator.getUserWithoutFollowed());
-        PostDTO postToBeCreated = TestUtilGenerator.getPostWithUserID(userSellerId, 124151);
-
-
-        //act
-         mockMvc.perform(post("/products/post")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(writer.writeValueAsString(postToBeCreated)))
-                .andDo(print())
-                .andExpect(content().contentType("application/json"))
-                .andExpect(status().isOk())
-                .andReturn();
-
-    }
-
-    @Test
-    @DisplayName("IntegrationTest US-0005- usuario no existe al crear post")
-    void createPostUserDoesntExistsTest() throws Exception {
-        //arrange
-        Integer userNoExistentId = 120;
-        while (userRepository.findById(userNoExistentId).isPresent()) {
-            userNoExistentId++;
-        }
-        PostDTO postToBeCreated = TestUtilGenerator.getPostWithUserID(userNoExistentId);
-        GenericResponseDTO expectedResponse = new GenericResponseDTO("El usuario no existe");
-        String expectedResponseString = writer.writeValueAsString(expectedResponse);
-        //act
-        MvcResult actualResponse = mockMvc.perform(post("/products/post")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(writer.writeValueAsString(postToBeCreated)))
-                .andDo(print())
-                .andExpect(content().contentType("application/json"))
-                .andExpect(status().isBadRequest())
-                .andReturn();
-        //assert
-        assertEquals(expectedResponseString, actualResponse.getResponse().getContentAsString(StandardCharsets.UTF_8));
-    }
-
-    @Test
-    @DisplayName("IntegrationTest US-0005- crearPost con userId menor a 1")
-    void createPostWithUserId0() throws Exception {
-        Integer userId0 = 0;
-        PostDTO postToBeCreated = TestUtilGenerator.getPostWithUserID(userId0);
-        GenericResponseDTO expectedResponse = new GenericResponseDTO("El id de usuario debe ser mayor a 0");
-        String expectedResponseString = writer.writeValueAsString(expectedResponse);
-        //act
-        MvcResult actualResponse = mockMvc.perform(post("/products/post")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(writer.writeValueAsString(postToBeCreated)))
-                .andDo(print())
-                .andExpect(content().contentType("application/json"))
-                .andExpect(status().isBadRequest())
-                .andReturn();
-        //assert
-        assertEquals(expectedResponseString, actualResponse.getResponse().getContentAsString(StandardCharsets.UTF_8));
-    }
-
-    @Test
-    @DisplayName("IntegrationTest US-0005- crear post sin post (null)")
-    void createPostWithoutAPost() throws Exception {
-
-        PostDTO postToBeCreated = null;
-
-        //act
-        MvcResult actualResponse = mockMvc.perform(post("/products/post")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(writer.writeValueAsString(postToBeCreated)))
-                .andDo(print())
-                .andExpect(content().contentType("application/json"))
-                .andExpect(status().isBadRequest())
-                .andReturn();
-    }
 }

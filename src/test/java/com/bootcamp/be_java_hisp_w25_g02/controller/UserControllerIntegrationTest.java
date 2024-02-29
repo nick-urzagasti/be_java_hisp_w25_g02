@@ -43,12 +43,12 @@ class UserControllerIntegrationTest {
     @Test
     @DisplayName("IntegrationTest US-0001- Seguir a un vendedor OK")
     void FollowUserOk() throws Exception {
-        //Arrange
+        //arrange
         Integer userNoSeller = userRepository.saveUser(TestUtilGenerator.getUserWithoutFollowed());
         Integer userSeller = userRepository.saveUser(TestUtilGenerator.getUserToFollow());
         System.out.println(userSeller);
         System.out.println(userNoSeller);
-        //Act
+        //act
         mockMvc.perform(post("/users/{userId}/follow/{userIdToFollow}", userNoSeller, userSeller))
                 .andDo(print())
                 .andExpect(status().isOk());
@@ -89,14 +89,14 @@ class UserControllerIntegrationTest {
     @Test
     @DisplayName("IntegrationTest US-0007 - dejar de seguir un vendedor OK")
     void unFollowUserOk() throws Exception {
-        //Arrange
+        //arrange
         Integer userSellerId = userRepository.saveUser(TestUtilGenerator.getUserToFollow());
         User userNoSeller = TestUtilGenerator.getUserWithoutFollowed();
         userNoSeller.setFollowing(List.of(userSellerId));
         Integer userNoSellerId = userRepository.saveUser(TestUtilGenerator.getUserWithoutFollowed());
         System.out.println(userNoSellerId);
         System.out.println(userSellerId);
-        //Act
+        //act
         mockMvc.perform(post("/users/{userId}/unfollow/{userIdToFollow}", userNoSellerId, userSellerId))
                 .andDo(print())
                 .andExpect(status().isOk());
