@@ -24,7 +24,6 @@ import org.springframework.test.web.servlet.MvcResult;
 
 import java.nio.charset.StandardCharsets;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -168,4 +167,37 @@ public class ProductControllerIntegrationTest {
         //assert
         assertEquals(expectedResponseString, actualResponse.getResponse().getContentAsString(StandardCharsets.UTF_8));
     }
+
+    @Test
+    @DisplayName("IntegrationTest Us05 crearPost con userId menor a 1")
+    void createPostWithUserId0() throws Exception {
+        Integer userId0 = 0;
+        PostDTO postToBeCreated = TestUtilGenerator.getPostWithUserID(userId0);
+        GenericResponseDTO expectedResponse = new GenericResponseDTO("Validation failed for argument [0] in public org.springframework.http.ResponseEntity<?> com.bootcamp.be_java_hisp_w25_g02.controller.ProductController.savePost(com.bootcamp.be_java_hisp_w25_g02.dto.request.PostDTO): [Field error in object 'postDTO' on field 'userId': rejected value [0]; codes [Min.postDTO.userId,Min.userId,Min.java.lang.Integer,Min]; arguments [org.springframework.context.support.DefaultMessageSourceResolvable: codes [postDTO.userId,userId]; arguments []; default message [userId],1]; default message [El id de usuario debe ser mayor a 0]] ");
+        String expectedResponseString = writer.writeValueAsString(expectedResponse);
+        //act
+        MvcResult actualResponse = mockMvc.perform(post("/products/post")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(writer.writeValueAsString(postToBeCreated)))
+                .andDo(print())
+                .andExpect(content().contentType("application/json"))
+                .andExpect(status().isBadRequest())
+                .andReturn();
+        //assert
+        assertEquals(expectedResponseString, actualResponse.getResponse().getContentAsString(StandardCharsets.UTF_8));
+    }
+    @Test
+    @DisplayName("IntegrationTest Us05 crear post sin post")
+    void createPostWithoutAPost() throws Exception {
+        PostDTO postToBeCreated = null;
+
+        //act
+        MvcResult actualResponse = mockMvc.perform(post("/products/post")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(writer.writeValueAsString(postToBeCreated)))
+                .andDo(print())
+                .andExpect(content().contentType("application/json"))
+                .andExpect(status().isBadRequest())
+                .andReturn();
+          }
 }
