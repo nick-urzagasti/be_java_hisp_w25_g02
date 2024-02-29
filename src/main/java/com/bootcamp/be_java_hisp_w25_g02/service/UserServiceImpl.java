@@ -35,7 +35,7 @@ public class UserServiceImpl implements IUserService{
         if(user.isPresent()){
             return new FollowerCountDTO(user.get().getUserId(),
                     user.get().getUserName(),
-                    user.get().getFollowing().stream().count());
+                    (long) user.get().getFollowedBy().size());
         } else {
             throw new BadRequestException("No encontrado el user con ese ID");
         }
@@ -108,6 +108,7 @@ public class UserServiceImpl implements IUserService{
                 throw new BadRequestException("No puede seguir al usuario porque no es vendedor");
             } else {
                 user.getFollowing().add(userIdToFollow);
+                userToFollow.getFollowedBy().add(userId);
             }
 
         } else {
@@ -124,6 +125,7 @@ public class UserServiceImpl implements IUserService{
         if (optionalUser.isPresent() && userToUnfollow.isPresent()) {
             User user = optionalUser.get();
             user.getFollowing().remove(userIdToUnfollow);
+            userToUnfollow.get().getFollowedBy().remove(userId);
         } else {
             throw new BadRequestException("El id ingresado es inválido");
         }

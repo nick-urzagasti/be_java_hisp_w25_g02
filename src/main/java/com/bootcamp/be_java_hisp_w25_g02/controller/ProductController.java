@@ -30,8 +30,8 @@ public class ProductController {
         return new ResponseEntity<>(this.postService.savePost(post), HttpStatus.OK);
     }
 
-    @GetMapping("/products/followed/{userId}/list")
-    public ResponseEntity<?> getFollowedPosts(@PathVariable @Positive @NotNull Integer userId, @RequestParam( required = false) String order){
+    @GetMapping("products/followed/{userId}/list")
+    public ResponseEntity<?> getFollowedPosts(@PathVariable @Positive(message = "El Id de usuario debe ser un numero positivo") @NotNull(message = "El id del usuario no puede ser null") Integer userId, @RequestParam( required = false) String order){
         return new ResponseEntity<>(this.postService.getPostsOrderedByDate(userId, order), HttpStatus.OK);
     }
 }
