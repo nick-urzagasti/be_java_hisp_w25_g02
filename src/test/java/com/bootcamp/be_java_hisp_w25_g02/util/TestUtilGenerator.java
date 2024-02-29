@@ -569,5 +569,22 @@ public class TestUtilGenerator {
 
             );
     }
+    public static PostDTO getPostWithUserID(Integer userId, Integer productId){
+        return new PostDTO(
+                userId,
+                LocalDate.now(),
+                new ProductDTO(
+                        productId,
+                        "Prod1",
+                        "tipo1",
+                        "brand1",
+                        "color1",
+                        "notes"
+                ),
+                12,
+                10.0
+
+        );
+    }
 
 }

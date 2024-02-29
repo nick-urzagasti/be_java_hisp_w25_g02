@@ -3,7 +3,6 @@ import com.bootcamp.be_java_hisp_w25_g02.dto.request.PostDTO;
 import com.bootcamp.be_java_hisp_w25_g02.service.IPostService;
 import com.bootcamp.be_java_hisp_w25_g02.service.PostServiceImpl;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,7 +30,7 @@ public class ProductController {
     }
 
     @GetMapping("products/followed/{userId}/list")
-    public ResponseEntity<?> getFollowedPosts(@PathVariable @Positive(message = "El Id del usuario debe ser positivo") @NotNull Integer userId, @RequestParam( required = false) String order){
+    public ResponseEntity<?> getFollowedPosts(@PathVariable @Positive(message = "El Id de usuario debe ser un numero positivo")  Integer userId, @RequestParam( required = false) String order){
         return new ResponseEntity<>(this.postService.getPostsOrderedByDate(userId, order), HttpStatus.OK);
     }
 }

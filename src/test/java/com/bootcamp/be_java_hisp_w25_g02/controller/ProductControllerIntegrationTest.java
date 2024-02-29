@@ -8,7 +8,6 @@ import com.bootcamp.be_java_hisp_w25_g02.entity.User;
 import com.bootcamp.be_java_hisp_w25_g02.repository.IPostRepository;
 import com.bootcamp.be_java_hisp_w25_g02.repository.IUserRepository;
 import com.bootcamp.be_java_hisp_w25_g02.util.TestUtilGenerator;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -24,6 +23,7 @@ import org.springframework.test.web.servlet.MvcResult;
 
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -34,7 +34,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @AutoConfigureMockMvc
 @SpringBootTest
-public class ProductControllerIntegrationTest {
+class ProductControllerIntegrationTest {
     private final ObjectWriter writer = new ObjectMapper().registerModule(new JavaTimeModule()).configure(SerializationFeature.WRAP_ROOT_VALUE, false).writer();
     @Autowired
     MockMvc mockMvc;
@@ -45,8 +45,8 @@ public class ProductControllerIntegrationTest {
 
 
     @Test
-    @DisplayName("IntegrationTest - order asc")
-    public void getFollowedPostsTestOk() throws Exception {
+    @DisplayName("IntegrationTest US-0006- listado de posts order asc")
+    void getFollowedPostsTestOk() throws Exception {
         //arrange
         Integer userSellerId = userRepository.saveUser(TestUtilGenerator.getUserToFollow());
         User userSeller = TestUtilGenerator.getUserToFollow();
@@ -74,39 +74,31 @@ public class ProductControllerIntegrationTest {
         //assert
         assertEquals(expectedResponseString, mvcResult.getResponse().getContentAsString(StandardCharsets.UTF_8));
     }
+
     @Test
-    @DisplayName("IntegrationTest - order asc")
-    public void getFollowedPostsTestUserIdNotPositiveOk() throws Exception {
+    @DisplayName("IntegrationTest US-0006- obtener post de los seguidos con id de usuario no positivo en el path")
+    void getFollowedPostsTestUserIdNotPositive() throws Exception {
         //arrange
-        Integer userSellerId = userRepository.saveUser(TestUtilGenerator.getUserToFollow());
-        User userSeller = TestUtilGenerator.getUserToFollow();
-        userSeller.setUserId(userSellerId);
-        User userNoSeller = TestUtilGenerator.getUserWithoutFollowed();
-        userNoSeller.setFollowing(List.of(userSellerId));
-        userRepository.saveUser(userNoSeller);
-        List<Post> posts = TestUtilGenerator.getPostsOfUserDisordered(userSellerId);
-        postRepository.savePost(posts.get(0));
-        postRepository.savePost(posts.get(1));
-        postRepository.savePost(posts.get(2));
-        FollowingPostDTO expectedResponse = new FollowingPostDTO(
-                userNoSeller.getUserId(),
-                TestUtilGenerator.getPostsDTOOrderByDateAsc(userSellerId)
+        Integer idNoPositivo = 0;
+        Set<GenericResponseDTO> expectedResponse = Set.of(
+                new GenericResponseDTO("El Id de usuario debe ser un numero positivo")
         );
         String expectedResponseString = writer.writeValueAsString(expectedResponse);
         //act
-        MvcResult mvcResult = mockMvc
-                .perform(get("/products/followed/{userId}/list", 0)
+        MvcResult actualResponse = mockMvc
+                .perform(get("/products/followed/{userId}/list", idNoPositivo)
                         .param("order", "date_asc"))
                 .andDo(print())
                 .andExpect(content().contentType("application/json"))
-                .andExpect(status().isOk())
+                .andExpect(status().isBadRequest())
                 .andReturn();
         //assert
-        assertEquals(expectedResponseString, mvcResult.getResponse().getContentAsString(StandardCharsets.UTF_8));
+        assertEquals(expectedResponseString, actualResponse.getResponse().getContentAsString(StandardCharsets.UTF_8));
     }
+
     @Test
-    @DisplayName("IntegrationTest - order desc")
-    public void getFollowedPostsDescTestOk() throws Exception {
+    @DisplayName("IntegrationTest US-0006- listado de posts order desc")
+    void getFollowedPostsDescTestOk() throws Exception {
         //arrange
         Integer userSellerId = userRepository.saveUser(TestUtilGenerator.getUserToFollow());
         User userSeller = TestUtilGenerator.getUserToFollow();
@@ -134,8 +126,9 @@ public class ProductControllerIntegrationTest {
         //assert
         assertEquals(expectedResponseString, mvcResult.getResponse().getContentAsString(StandardCharsets.UTF_8));
     }
+
     @Test
-    @DisplayName("Integration test - no hay post de las ultimas dos semanas")
+    @DisplayName("IntegrationTest US-0006- no hay post de las ultimas dos semanas")
     void getFollowedPostNoContentTest() throws Exception {
         //arrange
         Integer userSellerId = userRepository.saveUser(TestUtilGenerator.getUserToFollow());
@@ -159,13 +152,52 @@ public class ProductControllerIntegrationTest {
         assertEquals(expectedResponseString, actualResponse.getResponse().getContentAsString(StandardCharsets.UTF_8));
     }
     @Test
-    @DisplayName("Integration test - Crear un post OK")
+    @DisplayName("IntegrationTest US-0006- usuario no existe")
+    void getFollowedPostsUserDoesntExists() throws Exception {
+        //arrange
+        Integer userIdNonExistent = 120;
+        while (userRepository.findById(userIdNonExistent).isPresent()){
+            userIdNonExistent++;
+        }
+        GenericResponseDTO expectedResponse = new GenericResponseDTO("El usuario no existe");
+        String expectedResponseString = writer.writeValueAsString(expectedResponse);
+        //act
+        MvcResult actualResponse = mockMvc
+                .perform(get("/products/followed/{userId}/list", userIdNonExistent)
+                        .param("order", "date_desc"))
+                .andDo(print())
+                .andExpect(content().contentType("application/json"))
+                .andExpect(status().isNotFound())
+                .andReturn();
+        //assert
+        assertEquals(expectedResponseString, actualResponse.getResponse().getContentAsString(StandardCharsets.UTF_8));
+    }
+    @Test
+    @DisplayName("IntegrationTest US-0005- Crear un post OK")
     void createPostOK() throws Exception {
         //arrange
         Integer userSellerId = userRepository.saveUser(TestUtilGenerator.getUserToFollow());
         PostDTO postToBeCreated = TestUtilGenerator.getPostWithUserID(userSellerId);
         //act
-        MvcResult result = mockMvc.perform(post("/products/post")
+        mockMvc.perform(post("/products/post")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(writer.writeValueAsString(postToBeCreated)))
+                .andDo(print())
+                .andExpect(content().contentType("application/json"))
+                .andExpect(status().isOk())
+                .andReturn();
+
+    }
+    @Test
+    @DisplayName("IntegrationTest US-0005- Crear un post por primera vez (se vuelve vendedor) OK")
+    void createPostFirstTimeOK() throws Exception {
+        //arrange
+        Integer userSellerId = userRepository.saveUser(TestUtilGenerator.getUserWithoutFollowed());
+        PostDTO postToBeCreated = TestUtilGenerator.getPostWithUserID(userSellerId, 124151);
+
+
+        //act
+         mockMvc.perform(post("/products/post")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(writer.writeValueAsString(postToBeCreated)))
                 .andDo(print())
@@ -176,12 +208,12 @@ public class ProductControllerIntegrationTest {
     }
 
     @Test
-    @DisplayName("IntegrationTest - usuario no existe")
+    @DisplayName("IntegrationTest US-0005- usuario no existe al crear post")
     void createPostUserDoesntExistsTest() throws Exception {
         //arrange
         Integer userNoExistentId = 120;
-        while (userRepository.findById(userNoExistentId).isPresent()){
-            userNoExistentId ++;
+        while (userRepository.findById(userNoExistentId).isPresent()) {
+            userNoExistentId++;
         }
         PostDTO postToBeCreated = TestUtilGenerator.getPostWithUserID(userNoExistentId);
         GenericResponseDTO expectedResponse = new GenericResponseDTO("El usuario no existe");
@@ -199,7 +231,7 @@ public class ProductControllerIntegrationTest {
     }
 
     @Test
-    @DisplayName("IntegrationTest Us05 crearPost con userId menor a 1")
+    @DisplayName("IntegrationTest US-0005- crearPost con userId menor a 1")
     void createPostWithUserId0() throws Exception {
         Integer userId0 = 0;
         PostDTO postToBeCreated = TestUtilGenerator.getPostWithUserID(userId0);
@@ -216,8 +248,9 @@ public class ProductControllerIntegrationTest {
         //assert
         assertEquals(expectedResponseString, actualResponse.getResponse().getContentAsString(StandardCharsets.UTF_8));
     }
+
     @Test
-    @DisplayName("IntegrationTest Us05 crear post sin post")
+    @DisplayName("IntegrationTest US-0005- crear post sin post (null)")
     void createPostWithoutAPost() throws Exception {
 
         PostDTO postToBeCreated = null;
@@ -230,5 +263,5 @@ public class ProductControllerIntegrationTest {
                 .andExpect(content().contentType("application/json"))
                 .andExpect(status().isBadRequest())
                 .andReturn();
-          }
+    }
 }

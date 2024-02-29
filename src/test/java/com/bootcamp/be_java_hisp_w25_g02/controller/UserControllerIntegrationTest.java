@@ -31,7 +31,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @AutoConfigureMockMvc
 @SpringBootTest
-public class UserControllerIntegrationTest {
+class UserControllerIntegrationTest {
     private final ObjectWriter writer = new ObjectMapper().registerModule(new JavaTimeModule()).configure(SerializationFeature.WRAP_ROOT_VALUE, false).writer();
     @Autowired
     MockMvc mockMvc;
@@ -41,7 +41,7 @@ public class UserControllerIntegrationTest {
 
 
     @Test
-    @DisplayName("TestIntegration US1- Seguir a un vendedor OK")
+    @DisplayName("IntegrationTest US-0001- Seguir a un vendedor OK")
     void FollowUserOk() throws Exception {
         //Arrange
         Integer userNoSeller = userRepository.saveUser(TestUtilGenerator.getUserWithoutFollowed());
@@ -54,26 +54,8 @@ public class UserControllerIntegrationTest {
                 .andExpect(status().isOk());
 
     }
-
     @Test
-    @DisplayName("IntegrationTest US2 - dejar de seguir un vendedor OK")
-    void unFollowUserOk() throws Exception {
-        //Arrange
-        Integer userSellerId = userRepository.saveUser(TestUtilGenerator.getUserToFollow());
-        User userNoSeller = TestUtilGenerator.getUserWithoutFollowed();
-        userNoSeller.setFollowing(List.of(userSellerId));
-        Integer userNoSellerId = userRepository.saveUser(TestUtilGenerator.getUserWithoutFollowed());
-        System.out.println(userNoSellerId);
-        System.out.println(userSellerId);
-        //Act
-        mockMvc.perform(post("/users/{userId}/unfollow/{userIdToFollow}", userNoSellerId, userSellerId))
-                .andDo(print())
-                .andExpect(status().isOk());
-
-    }
-
-    @Test
-    @DisplayName("IntegrationTest obtener lista de usuarios que sigue un usuario Ok")
+    @DisplayName("IntegrationTest US-0004- obtener lista de usuarios que siguen a un vendedor Ok")
     void getFollowersList() throws Exception {
         //arrange
         User userFollower = TestUtilGenerator.getUserWithoutFollowed();
@@ -94,8 +76,8 @@ public class UserControllerIntegrationTest {
         String expectedResponseString = writer.writeValueAsString(expectedResponse);
         //act
         MvcResult actualResponse = mockMvc.perform(
-                get("/user/{userId}/followers", userFollowedId)
-                        .param("order", order))
+                        get("/user/{userId}/followers", userFollowedId)
+                                .param("order", order))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -104,4 +86,22 @@ public class UserControllerIntegrationTest {
         //assert
         assertEquals(expectedResponseString, actualResponse.getResponse().getContentAsString(StandardCharsets.UTF_8));
     }
+    @Test
+    @DisplayName("IntegrationTest US-0007 - dejar de seguir un vendedor OK")
+    void unFollowUserOk() throws Exception {
+        //Arrange
+        Integer userSellerId = userRepository.saveUser(TestUtilGenerator.getUserToFollow());
+        User userNoSeller = TestUtilGenerator.getUserWithoutFollowed();
+        userNoSeller.setFollowing(List.of(userSellerId));
+        Integer userNoSellerId = userRepository.saveUser(TestUtilGenerator.getUserWithoutFollowed());
+        System.out.println(userNoSellerId);
+        System.out.println(userSellerId);
+        //Act
+        mockMvc.perform(post("/users/{userId}/unfollow/{userIdToFollow}", userNoSellerId, userSellerId))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+    }
+
+
 }
