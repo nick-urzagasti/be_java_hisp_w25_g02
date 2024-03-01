@@ -42,7 +42,7 @@ class UserControllerIntegrationTest {
 
 
     @Test
-    @DisplayName("IntegrationTest US-0001- Seguir a un vendedor OK")
+    @DisplayName("IntegrationTest US-0001- Follow user -TestOK")
     @Order(1)
     void FollowUserOk() throws Exception {
         //arrange
@@ -57,7 +57,7 @@ class UserControllerIntegrationTest {
 
     }
     @Test
-    @DisplayName("IntegrationTest US-0002 - obtener cantidad de seguidores de un usuario")
+    @DisplayName("IntegrationTest US-0002 - Get followers count - TestOK")
     @Order(2)
     void getFollowersCount() throws Exception {
         //arrange
@@ -79,7 +79,7 @@ class UserControllerIntegrationTest {
         assertEquals(expectedResponseString, actualResponse.getResponse().getContentAsString(StandardCharsets.UTF_8));
     }
     @Test
-    @DisplayName("IntegrationTest US-0004- obtener lista de usuarios que siguen a un vendedor Ok")
+    @DisplayName("IntegrationTest US-0004- List of the users that follows a seller - TestOk")
     @Order(3)
     void getFollowersList() throws Exception {
         //arrange
@@ -112,7 +112,7 @@ class UserControllerIntegrationTest {
         assertEquals(expectedResponseString, actualResponse.getResponse().getContentAsString(StandardCharsets.UTF_8));
     }
     @Test
-    @DisplayName("IntegrationTest US-0007 - dejar de seguir un vendedor OK")
+    @DisplayName("IntegrationTest US-0007 - Unfollow a seller - TestOK")
     @Order(4)
     void unFollowUserOk() throws Exception {
         //arrange

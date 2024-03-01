@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -44,7 +45,7 @@ class ProductControllerIntegrationTest {
     IUserRepository userRepository;
 
     @Test
-    @DisplayName("IntegrationTest US-0005- Crear un post OK")
+    @DisplayName("IntegrationTest US-0005- Create a post - TestOK")
     @Order(1)
     void createPostOK() throws Exception {
         //arrange
@@ -62,13 +63,12 @@ class ProductControllerIntegrationTest {
     }
 
     @Test
-    @DisplayName("IntegrationTest US-0005- Crear un post por primera vez (se vuelve vendedor) OK")
+    @DisplayName("IntegrationTest US-0005- Create a post for the first time (user becomes seller) - TestOK")
     @Order(2)
     void createPostFirstTimeOK() throws Exception {
         //arrange
         Integer userSellerId = userRepository.saveUser(TestUtilGenerator.getUserWithoutFollowed());
         PostDTO postToBeCreated = TestUtilGenerator.getPostWithUserID(userSellerId, 124151);
-
 
         //act
         mockMvc.perform(post("/products/post")
@@ -76,13 +76,13 @@ class ProductControllerIntegrationTest {
                         .content(writer.writeValueAsString(postToBeCreated)))
                 .andDo(print())
                 .andExpect(content().contentType("application/json"))
-                .andExpect(status().isOk())
-                .andReturn();
-
+                .andExpect(status().isOk());
+        //assert
+        assertTrue(userRepository.findById(userSellerId).get().getSeller());
     }
 
     @Test
-    @DisplayName("IntegrationTest US-0005- usuario no existe al crear post")
+    @DisplayName("IntegrationTest US-0005- Create post but the userId doesnt exist - BadRequest")
     @Order(3)
     void createPostUserDoesntExistsTest() throws Exception {
         //arrange
@@ -106,7 +106,7 @@ class ProductControllerIntegrationTest {
     }
 
     @Test
-    @DisplayName("IntegrationTest US-0005- crearPost con userId menor a 1")
+    @DisplayName("IntegrationTest US-0005- Create Post with non positive userId - BadRequest")
     @Order(4)
     void createPostWithUserId0() throws Exception {
         //arrange
@@ -127,7 +127,7 @@ class ProductControllerIntegrationTest {
     }
 
     @Test
-    @DisplayName("IntegrationTest US-0005- crear post sin post (null)")
+    @DisplayName("IntegrationTest US-0005- Create post without post (null)")
     @Order(5)
     void createPostWithoutAPost() throws Exception {
         //arrange
@@ -144,7 +144,7 @@ class ProductControllerIntegrationTest {
 
 
     @Test
-    @DisplayName("IntegrationTest US-0006- listado de posts order asc")
+    @DisplayName("IntegrationTest US-0006- Lists of post order date_ asc - TestOk")
     @Order(6)
     void getFollowedPostsTestOk() throws Exception {
         //arrange
@@ -176,7 +176,7 @@ class ProductControllerIntegrationTest {
     }
 
     @Test
-    @DisplayName("IntegrationTest US-0006- obtener post de los seguidos con id de usuario no positivo en el path")
+    @DisplayName("IntegrationTest US-0006- List of post with non postive userId on path - BadRequest")
     @Order(7)
     void getFollowedPostsTestUserIdNotPositive() throws Exception {
         //arrange
@@ -198,7 +198,7 @@ class ProductControllerIntegrationTest {
     }
 
     @Test
-    @DisplayName("IntegrationTest US-0006- listado de posts order desc")
+    @DisplayName("IntegrationTest US-0006- List of post order date_asc")
     @Order(8)
     void getFollowedPostsDescTestOk() throws Exception {
         //arrange
@@ -230,7 +230,7 @@ class ProductControllerIntegrationTest {
     }
 
     @Test
-    @DisplayName("IntegrationTest US-0006- no hay post de las ultimas dos semanas")
+    @DisplayName("IntegrationTest US-0006- List of posts but there are not posts of the last two weeks- NotFound")
     @Order(9)
     void getFollowedPostNoContentTest() throws Exception {
         //arrange
@@ -256,7 +256,7 @@ class ProductControllerIntegrationTest {
     }
 
     @Test
-    @DisplayName("IntegrationTest US-0006- usuario no existe")
+    @DisplayName("IntegrationTest US-0006- Lists of posts but user does'nt exists -BadRequest")
     @Order(10)
     void getFollowedPostsUserDoesntExists() throws Exception {
         //arrange
