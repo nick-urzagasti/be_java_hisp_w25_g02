@@ -18,14 +18,13 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.CollectionUtils;
 
-import java.util.ArrayList;
-import java.util.Optional;
+import java.util.*;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.util.List;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
@@ -56,8 +55,7 @@ class UserServiceImplTest {
         //Assert
         verify(iUserRepository, atLeastOnce()).findById(userId);
         verify(iUserRepository, atLeastOnce()).findById(userIdToFollow);
-
-
+        assertTrue(CollectionUtils.contains(user.get().getFollowing().iterator(), userToFollow.get().getUserId()));
     }
 
     @Test
