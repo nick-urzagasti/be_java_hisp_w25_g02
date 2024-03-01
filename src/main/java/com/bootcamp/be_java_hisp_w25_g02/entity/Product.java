@@ -6,16 +6,13 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
-import java.nio.DoubleBuffer;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-
 public class Product {
-    long product_id;
-    String product_name;
+    Integer productId;
+    String productName;
     String type;
     String brand;
     String color;

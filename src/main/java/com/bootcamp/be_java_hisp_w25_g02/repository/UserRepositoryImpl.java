@@ -5,35 +5,37 @@ import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
-public class UserRepositoryImpl {
-    List<User> users;
+public class UserRepositoryImpl implements IUserRepository{
+    List<User> userList;
     public UserRepositoryImpl(){
         loadUsers();
     }
     private void loadUsers(){
-        User usuarioVendedor1 = new User(4L, "Jose234", true, new ArrayList<>(), new ArrayList<>());
-        User usuarioVendedor2 = new User(5L, "Juan", true, new ArrayList<>(), new ArrayList<>());
-        User usuarioSeguidor1 =   new User(11L, "MariaJose", false, new ArrayList<>(), new ArrayList<>());
-        usuarioSeguidor1.getFollowing().add(usuarioVendedor1);
-        usuarioSeguidor1.getFollowing().add(usuarioVendedor2);
-        usuarioVendedor1.getFollowedBy().add(usuarioSeguidor1);
-        usuarioVendedor2.getFollowedBy().add(usuarioSeguidor1);
-        users = new ArrayList<>(List.of(
-           new User(1L, "Javier", false, new ArrayList<>(), new ArrayList<>()),
-                new User(1L, "NU", false, new ArrayList<>(), new ArrayList<>()),
-                new User(2L, "NA", false, new ArrayList<>(), new ArrayList<>()),
-                new User(3L, "Martin", false, new ArrayList<>(), new ArrayList<>()),
-                new User(7L, "Maria", true, new ArrayList<>(), new ArrayList<>()),
-                new User(8L, "Marcos", false, new ArrayList<>(), new ArrayList<>()),
-                new User(9L, "Malena", true, new ArrayList<>(), new ArrayList<>()),
-                new User(10L, "JoseMaria", true, new ArrayList<>(), new ArrayList<>())
-      , usuarioVendedor1, usuarioVendedor2, usuarioSeguidor1
-
-
-        )
-        );
+        userList = new ArrayList<>(List.of(
+                new User(1, "Javier", false, new ArrayList<>(List.of(7,9)), new ArrayList<>()),
+                new User(2, "NA", false, new ArrayList<>(), new ArrayList<>()),
+                new User(3, "Martin", false, new ArrayList<>(), new ArrayList<>()),
+                new User(7, "Maria", true, new ArrayList<>(), new ArrayList<>(List.of(1))),
+                new User(8, "Marcos", false, new ArrayList<>(), new ArrayList<>()),
+                new User(9, "Malena", true, new ArrayList<>(), new ArrayList<>(List.of(1, 3, 7))),
+                new User(10, "JoseMaria", true, new ArrayList<>(), new ArrayList<>(List.of(1))),
+                new User(11, "Pedro Gomez", true, new ArrayList<>(), new ArrayList<>())
+        ));
     }
+
+
+    @Override
+    public Optional<User> findById(Integer id) {
+        return this.userList.stream().filter(user -> user.getUserId().equals(id)).findFirst();
+    }
+
+    @Override
+    public List<User> findAll() {
+        return this.userList;
+    }
+
 
 }
