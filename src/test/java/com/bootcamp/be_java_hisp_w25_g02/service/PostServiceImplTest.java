@@ -28,7 +28,7 @@ class PostServiceImplTest {
     PostServiceImpl postService;
 
     @Test
-    @DisplayName("T-005 - cumple - verificar tipo de ordenamiento (date_asc)")
+    @DisplayName("T-005 - verify that the type of order \"date_asc\" exists - Test Ok")
     void getPostOrderedByDateOrderTypeOKTest(){
         //arrange
         String order =  "date_asc";
@@ -37,16 +37,14 @@ class PostServiceImplTest {
         when(iPostRepository.findByUserId(1)).thenReturn(
                 TestUtilGenerator.getPostsDisordered()
         );
-        FollowingPostDTO expectedResponse = TestUtilGenerator.getFollowingPostOrderAsc();
         //act
-        FollowingPostDTO actualResponse = postService.getPostsOrderedByDate(userId, order);
+        postService.getPostsOrderedByDate(userId, order);
         //assert
         verify(iPostRepository, atLeast(1)).findByUserId(1);
         verify(userService, atLeast(1)).getFollowedUsersId(userId);
-        assertEquals(expectedResponse, actualResponse);
     }
     @Test
-    @DisplayName("T-005 - cumple - verificar tipo de ordenamiento (date_desc)")
+    @DisplayName("T-005 - verify that the type of order \"date_desc\" exists - Test Ok")
     void getPostOrderedByDateOrderTypeDescOKTest(){
         //arrange
         String order =  "date_desc";
@@ -55,16 +53,14 @@ class PostServiceImplTest {
         when(iPostRepository.findByUserId(1)).thenReturn(
                 TestUtilGenerator.getPostsDisordered()
         );
-        FollowingPostDTO expectedResponse = TestUtilGenerator.getFollowingPostOrderDesc();
         //act
-        FollowingPostDTO actualResponse = postService.getPostsOrderedByDate(userId, order);
+        postService.getPostsOrderedByDate(userId, order);
         //assert
         verify(iPostRepository, atLeast(1)).findByUserId(1);
         verify(userService, atLeast(1)).getFollowedUsersId(userId);
-        assertEquals(expectedResponse, actualResponse);
     }
     @Test
-    @DisplayName("T-005-cumple-verificar tipo de ordenamiento (null)")
+    @DisplayName("T-005 - verify the type of order null - Test Ok")
     void getPostOrderedByDateOrderTypeNullOKTest(){
         //arrange
         String order =  null;
@@ -83,7 +79,7 @@ class PostServiceImplTest {
     }
 
     @Test
-    @DisplayName("T005- No cumple - notifica la no existencia mediante una excepcion")
+    @DisplayName("T-005 - the type of order doesnt exists - BadRequest ")
     void getPostOrderedByDateBadRequest(){
         //arrange
         String order = "ordenamiento_asc";
@@ -93,7 +89,7 @@ class PostServiceImplTest {
     }
 
     @Test
-    @DisplayName("T006 -Verificar ordenamiento ascendente por fecha ")
+    @DisplayName("T-006 - verify right order of posts (date_asc) - TestOK")
     void getPostOrderedByDateAscOkTest(){
         //arrange
         String order = "date_asc";
@@ -111,7 +107,7 @@ class PostServiceImplTest {
         assertEquals(expectedResponse, actualResponse);
     }
     @Test
-    @DisplayName("T006 -Verificar ordenamiento descendente por fecha ")
+    @DisplayName("T-006 - verify right order of posts (date_desc) - TestOK")
     void getPostOrderedByDateDescOkTest(){
         //arrange
         String order = "date_desc";

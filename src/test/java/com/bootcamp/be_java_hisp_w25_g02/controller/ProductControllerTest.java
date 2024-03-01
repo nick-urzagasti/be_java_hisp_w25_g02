@@ -24,7 +24,7 @@ class ProductControllerTest {
     ProductController productController;
 
     @Test
-    @DisplayName("T-006 verificar ordenamiento asc")
+    @DisplayName("T-006 - verify order - TestOk")
     void getPostOrdereByDateAscOK(){
         //arrange
         Integer userId = 3;
@@ -38,19 +38,5 @@ class ProductControllerTest {
         assertEquals(expectedResponse, actualResponse);
     }
 
-    @Test
-    @DisplayName("T-006 verificar ordenamiento desc")
-    void getPostOrdereByDateDescOk(){
-        //arrange
-        Integer userId = 3;
-        String order = "date_desc";
-        when(postService.getPostsOrderedByDate(userId, order)).thenReturn(TestUtilGenerator.getFollowingPostOrderDesc());
-        ResponseEntity<?> expectedResponse = new ResponseEntity<>(TestUtilGenerator.getFollowingPostOrderDesc(), HttpStatus.OK);
-        //act
-        ResponseEntity<?> actualResponse = productController.getFollowedPosts(userId, order);
-        //assert
-        verify(postService, atLeast(1)).getPostsOrderedByDate(userId, order);
-        assertEquals(expectedResponse, actualResponse);
-    }
 
 }

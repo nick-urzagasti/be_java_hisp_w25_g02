@@ -10,37 +10,32 @@ import com.bootcamp.be_java_hisp_w25_g02.entity.User;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
+import com.bootcamp.be_java_hisp_w25_g02.dto.response.FollowingPostDTO;
+import com.bootcamp.be_java_hisp_w25_g02.dto.response.ProductDTO;
+import com.bootcamp.be_java_hisp_w25_g02.dto.response.UserDTO;
+import com.bootcamp.be_java_hisp_w25_g02.dto.response.UserFollowingDTO;
+
 import java.time.LocalDate;
 import java.util.List;
 
 public class TestUtilGenerator {
-        public static UserFollowingDTO getCorrectAscUserFollowingDTO() {
-                return new UserFollowingDTO(1, "Javier",
-                        List.of(new UserDTO(9, "Malena"), new UserDTO(7, "Maria")));
-        }
-        
-        public static UserFollowingDTO getCorrectDescUserFollowingDTO() {
-                return new UserFollowingDTO(1, "Javier",
-                        List.of(new UserDTO(7, "Maria"), new UserDTO(9, "Malena")));
-        }
+    public static UserFollowingDTO getCorrectAscUserFollowingDTO() {
+        return new UserFollowingDTO(1, "Javier",
+                List.of(new UserDTO(9, "Malena"), new UserDTO(7, "Maria")));
+    }
 
         public static UserFollowingDTO getCorrectAscUserFollowingDTO_id12() {
             return new UserFollowingDTO(12, "Juan",
                     List.of(new UserDTO(10, "JoseMaria"), new UserDTO(11, "Pedro Gomez")));
         }
+    public static UserFollowingDTO getCorrectDescUserFollowingDTO() {
+        return new UserFollowingDTO(1, "Javier",
+                List.of(new UserDTO(7, "Maria"), new UserDTO(9, "Malena")));
+    }
 
-        public static User getUserWithFollowingSellers() {
-                return new User(1, "Javier", false, new ArrayList<>(List.of(
-                        7, 9
-                )), new ArrayList<>());
-        }
-        public static User followingUserId7() {
-                return new User(7, "Maria", true, new ArrayList<>(), new ArrayList<>());
-        }
-
-        public static User followingUserId9() {
-                return new User(9, "Malena", true, new ArrayList<>(), new ArrayList<>());
-        }
+    public static User getUserWithFollowingSellers() {
+        return new User(1, "Javier", false, new ArrayList<>(List.of(7, 9)), new ArrayList<>());
+    }
 
         public static FollowerListDTO getFollowerListDTOId7() {
             return new FollowerListDTO(7, "Maria", List.of(new UserDTO(1, "Javier")));
@@ -109,10 +104,17 @@ public class TestUtilGenerator {
                 List.of())
             );
         }
+    public static User followingUserId7() {
+        return new User(7, "Maria", true, new ArrayList<>(), new ArrayList<>());
+    }
 
-        public static User getUserNotSeller() {
-            return new User(3, "Martin", false, new ArrayList<>(), new ArrayList<>());
-        }
+    public static User followingUserId9() {
+        return new User(9, "Malena", true, new ArrayList<>(), new ArrayList<>());
+    }
+
+    public static User getUserNotSeller() {
+        return new User(3, "Martin", false, new ArrayList<>(), new ArrayList<>());
+    }
 
     public static List<Post> getPostsDisordered() {
         return List.of(
@@ -167,6 +169,7 @@ public class TestUtilGenerator {
                 )
         );
     }
+
     public static List<PostDTO> getPostsDTODisordered() {
         return List.of(
                 new PostDTO(
@@ -313,7 +316,7 @@ public class TestUtilGenerator {
                         12,
                         10.0
                 )
-                );
+        );
     }
 
     public static FollowingPostDTO getFollowingPostOrderAsc() {
@@ -322,19 +325,22 @@ public class TestUtilGenerator {
                 getPostsDTOOrderByDateAsc()
         );
     }
+
     public static FollowingPostDTO getFollowingPostOrderDesc() {
         return new FollowingPostDTO(
                 3,
                 getPostsDTOOrderByDateDesc()
         );
     }
-    public static FollowingPostDTO getFollowingPostDisordered(){
+
+    public static FollowingPostDTO getFollowingPostDisordered() {
         return new FollowingPostDTO(
                 3,
                 getPostsDTODisordered()
         );
     }
-    public static List<Post> getPostsOfLimitTwoWeeks(){
+
+    public static List<Post> getPostsOfLimitTwoWeeks() {
         return List.of(
                 new Post(
                         1,
@@ -393,25 +399,26 @@ public class TestUtilGenerator {
         List<Integer> list2 = List.of(6, 7, 10);
         return new User(5, "Matias Del Salvador", true, list1, list2);
     }
-    public static User createUser2(){
+
+    public static User createUser2() {
         List<Integer> list3 = List.of(1, 2, 3);
         List<Integer> list4 = List.of(5, 7, 10);
         return new User(6, "Romina Fuentes", true, list3, list4);
     }
 
-    public static User createUser3(){
+    public static User createUser3() {
         List<Integer> list5 = List.of(1, 2, 3);
         List<Integer> list6 = List.of(5, 6, 10);
         return new User(7, "Abel Gomez", true, list5, list6);
     }
 
-    public static User createUser4(){
+    public static User createUser4() {
         List<Integer> list8 = List.of(5, 6, 7);
         List<Integer> list9 = List.of(5, 6, 7);
         return new User(12, "Jorge Alba", true, list8, list9);
     }
 
-    public static List<UserDTO> createFollowerDTOList(String order){
+    public static List<UserDTO> createFollowerDTOList(String order) {
 
         List<UserDTO> listOfUserDTOs = new ArrayList<>();
 
@@ -424,7 +431,7 @@ public class TestUtilGenerator {
         UserDTO userDTO3 = new UserDTO(user3.getUserId(), user3.getUserName());
 
         if (order != null) {
-            switch(order) {
+            switch (order) {
                 case "name_asc":
                     listOfUserDTOs.add(userDTO3);
                     listOfUserDTOs.add(userDTO1);
