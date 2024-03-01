@@ -27,9 +27,7 @@ public class TestUtilGenerator {
         }
 
         public static User getUserWithFollowingSellers() {
-                return new User(1, "Javier", false, new ArrayList<>(List.of(
-                        7, 9
-                )), new ArrayList<>());
+                return new User(1, "Javier", false, new ArrayList<>(List.of(7, 9)), new ArrayList<>());
         }
         public static User followingUserId7() {
                 return new User(7, "Maria", true, new ArrayList<>(), new ArrayList<>());

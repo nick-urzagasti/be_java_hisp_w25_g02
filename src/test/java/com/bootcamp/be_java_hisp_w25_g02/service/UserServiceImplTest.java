@@ -325,19 +325,16 @@ class UserServiceImplTest {
                 ()-> userServiceImpl.getFollowersList(1, incorrectOrderString));
     }
 
-
     @Test
     @DisplayName("T-0007 - Total followers given user ID")
     void getUserTotalFollowers() {
         //ARRANGE
-        User user = TestUtilGenerator.createUser1(); // jorge
+        User user = TestUtilGenerator.createUser1();
         Integer userId = 1;
         when(iUserRepository.findById(userId)).thenReturn(Optional.of(user));
 
         //ACT
         FollowerCountDTO result = userServiceImpl.getUserTotalFollowers(userId);
-        System.out.println(result);
-        System.out.println(user);
         //ASSERT
         assertNotNull(result);
         assertThat(result.followersCount()).isEqualTo(user.getFollowedBy().size());
