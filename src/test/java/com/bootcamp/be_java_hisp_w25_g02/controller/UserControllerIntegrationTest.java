@@ -6,7 +6,6 @@ import com.bootcamp.be_java_hisp_w25_g02.dto.response.UserDTO;
 import com.bootcamp.be_java_hisp_w25_g02.entity.User;
 import com.bootcamp.be_java_hisp_w25_g02.repository.IUserRepository;
 import com.bootcamp.be_java_hisp_w25_g02.util.TestUtilGenerator;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
