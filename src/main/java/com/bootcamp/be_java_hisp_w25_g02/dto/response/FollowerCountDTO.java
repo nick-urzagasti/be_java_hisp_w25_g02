@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.*;
 
 public record FollowerCountDTO(
-
+        // TODO: sacar validaciones de responseDTOs
         @Min(value = 1, message = "El id de usuario no puede ser menor a 1")
         @NotNull(message = "El id del usuario no puede ser nulo")
         @JsonProperty("user_id")
