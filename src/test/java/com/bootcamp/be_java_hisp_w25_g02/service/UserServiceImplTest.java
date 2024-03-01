@@ -229,7 +229,7 @@ class UserServiceImplTest {
     }
 
     @Test
-    @DisplayName("T0004 - When calling getFollowersList(), without an 'order' param, the list is returned without any order.")
+    @DisplayName("T-0004 - When calling getFollowersList(), without an 'order' param, the list is returned without any order.")
     public void getFollowersListTestNoOrderParam(){
         // Arr
         String order = null;
@@ -256,7 +256,7 @@ class UserServiceImplTest {
     }
 
     @Test
-    @DisplayName("T0004 - When calling getFollowersList(), with 'order' param being 'name_asc' , the list is returned in order ascending by name.")
+    @DisplayName("T-0004 - When calling getFollowersList(), with 'order' param being 'name_asc' , the list is returned in order ascending by name.")
     public void getFollowersListTestOrderAsc(){
         // Arr
         String order = "name_asc";
@@ -282,7 +282,7 @@ class UserServiceImplTest {
     }
 
     @Test
-    @DisplayName("T0004 - When calling getFollowersList(), with 'order' param being 'name_desc' , the list is returned in order descending by name.")
+    @DisplayName("T-0004 - When calling getFollowersList(), with 'order' param being 'name_desc' , the list is returned in order descending by name.")
     public void getFollowersListTestOrderDesc(){
 
         // Arr
@@ -309,7 +309,7 @@ class UserServiceImplTest {
     }
 
     @Test
-    @DisplayName("T0003 - When calling getFollowersList(), an exception is thrown if 'order' has an incorrect value")
+    @DisplayName("T-0003 - When calling getFollowersList(), an exception is thrown if 'order' has an incorrect value")
     public void getFollowersListTestIncorrectOrderParam(){
         // Arr
         String incorrectOrderString = "algoIncorrecto";
