@@ -12,8 +12,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -34,6 +33,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @AutoConfigureMockMvc
 @SpringBootTest
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class ProductControllerIntegrationTest {
     private final ObjectWriter writer = new ObjectMapper().registerModule(new JavaTimeModule()).configure(SerializationFeature.WRAP_ROOT_VALUE, false).writer();
     @Autowired
@@ -45,6 +45,7 @@ class ProductControllerIntegrationTest {
 
     @Test
     @DisplayName("IntegrationTest US-0005- Crear un post OK")
+    @Order(1)
     void createPostOK() throws Exception {
         //arrange
         Integer userSellerId = userRepository.saveUser(TestUtilGenerator.getUserToFollow());
@@ -62,6 +63,7 @@ class ProductControllerIntegrationTest {
 
     @Test
     @DisplayName("IntegrationTest US-0005- Crear un post por primera vez (se vuelve vendedor) OK")
+    @Order(2)
     void createPostFirstTimeOK() throws Exception {
         //arrange
         Integer userSellerId = userRepository.saveUser(TestUtilGenerator.getUserWithoutFollowed());
@@ -81,6 +83,7 @@ class ProductControllerIntegrationTest {
 
     @Test
     @DisplayName("IntegrationTest US-0005- usuario no existe al crear post")
+    @Order(3)
     void createPostUserDoesntExistsTest() throws Exception {
         //arrange
         Integer userNoExistentId = 120;
@@ -104,6 +107,7 @@ class ProductControllerIntegrationTest {
 
     @Test
     @DisplayName("IntegrationTest US-0005- crearPost con userId menor a 1")
+    @Order(4)
     void createPostWithUserId0() throws Exception {
         //arrange
         Integer userId0 = 0;
@@ -124,6 +128,7 @@ class ProductControllerIntegrationTest {
 
     @Test
     @DisplayName("IntegrationTest US-0005- crear post sin post (null)")
+    @Order(5)
     void createPostWithoutAPost() throws Exception {
         //arrange
         PostDTO postToBeCreated = null;
@@ -140,6 +145,7 @@ class ProductControllerIntegrationTest {
 
     @Test
     @DisplayName("IntegrationTest US-0006- listado de posts order asc")
+    @Order(6)
     void getFollowedPostsTestOk() throws Exception {
         //arrange
         Integer userSellerId = userRepository.saveUser(TestUtilGenerator.getUserToFollow());
@@ -171,6 +177,7 @@ class ProductControllerIntegrationTest {
 
     @Test
     @DisplayName("IntegrationTest US-0006- obtener post de los seguidos con id de usuario no positivo en el path")
+    @Order(7)
     void getFollowedPostsTestUserIdNotPositive() throws Exception {
         //arrange
         Integer idNoPositivo = 0;
@@ -192,6 +199,7 @@ class ProductControllerIntegrationTest {
 
     @Test
     @DisplayName("IntegrationTest US-0006- listado de posts order desc")
+    @Order(8)
     void getFollowedPostsDescTestOk() throws Exception {
         //arrange
         Integer userSellerId = userRepository.saveUser(TestUtilGenerator.getUserToFollow());
@@ -223,6 +231,7 @@ class ProductControllerIntegrationTest {
 
     @Test
     @DisplayName("IntegrationTest US-0006- no hay post de las ultimas dos semanas")
+    @Order(9)
     void getFollowedPostNoContentTest() throws Exception {
         //arrange
         Integer userSellerId = userRepository.saveUser(TestUtilGenerator.getUserToFollow());
@@ -248,6 +257,7 @@ class ProductControllerIntegrationTest {
 
     @Test
     @DisplayName("IntegrationTest US-0006- usuario no existe")
+    @Order(10)
     void getFollowedPostsUserDoesntExists() throws Exception {
         //arrange
         Integer userIdNonExistent = 120;

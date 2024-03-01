@@ -11,8 +11,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -33,6 +32,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @AutoConfigureMockMvc
 @SpringBootTest
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class UserControllerIntegrationTest {
     private final ObjectWriter writer = new ObjectMapper().registerModule(new JavaTimeModule()).configure(SerializationFeature.WRAP_ROOT_VALUE, false).writer();
     @Autowired
@@ -44,6 +44,7 @@ class UserControllerIntegrationTest {
 
     @Test
     @DisplayName("IntegrationTest US-0001- Seguir a un vendedor OK")
+    @Order(1)
     void FollowUserOk() throws Exception {
         //arrange
         Integer userNoSeller = userRepository.saveUser(TestUtilGenerator.getUserWithoutFollowed());
@@ -57,7 +58,30 @@ class UserControllerIntegrationTest {
 
     }
     @Test
+    @DisplayName("IntegrationTest US-0002 - obtener cantidad de seguidores de un usuario")
+    @Order(2)
+    void getFollowersCount() throws Exception {
+        //arrange
+        User userWithFollowers = TestUtilGenerator.getUserSeller();
+        userWithFollowers.getFollowedBy().add(1);
+        userWithFollowers.getFollowedBy().add(2);
+        userWithFollowers.getFollowedBy().add(3);
+        Integer userWithFollowersId = userRepository.saveUser(userWithFollowers);
+        Long followersQuantity = 3L;
+        FollowerCountDTO expectedResponse = new FollowerCountDTO(userWithFollowersId, userWithFollowers.getUserName(), followersQuantity);
+        String expectedResponseString = writer.writeValueAsString(expectedResponse);
+        //act
+        MvcResult actualResponse = mockMvc.perform(get("/users/{userId}/followers/count", userWithFollowersId))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andReturn();
+        //assert
+        assertEquals(expectedResponseString, actualResponse.getResponse().getContentAsString(StandardCharsets.UTF_8));
+    }
+    @Test
     @DisplayName("IntegrationTest US-0004- obtener lista de usuarios que siguen a un vendedor Ok")
+    @Order(3)
     void getFollowersList() throws Exception {
         //arrange
         User userFollower = TestUtilGenerator.getUserWithoutFollowed();
@@ -90,6 +114,7 @@ class UserControllerIntegrationTest {
     }
     @Test
     @DisplayName("IntegrationTest US-0007 - dejar de seguir un vendedor OK")
+    @Order(4)
     void unFollowUserOk() throws Exception {
         //arrange
         Integer userSellerId = userRepository.saveUser(TestUtilGenerator.getUserToFollow());
@@ -104,26 +129,6 @@ class UserControllerIntegrationTest {
                 .andExpect(status().isOk());
 
     }
-    @Test
-    @DisplayName("IntegrationTest US-0002 - obtener cantidad de seguidores de un usuario")
-    void getFollowersCount() throws Exception {
-        //arrange
-        User userWithFollowers = TestUtilGenerator.getUserSeller();
-        userWithFollowers.getFollowedBy().add(1);
-        userWithFollowers.getFollowedBy().add(2);
-        userWithFollowers.getFollowedBy().add(3);
-        Integer userWithFollowersId = userRepository.saveUser(userWithFollowers);
-        Long followersQuantity = 3L;
-        FollowerCountDTO expectedResponse = new FollowerCountDTO(userWithFollowersId, userWithFollowers.getUserName(), followersQuantity);
-        String expectedResponseString = writer.writeValueAsString(expectedResponse);
-        //act
-        MvcResult actualResponse = mockMvc.perform(get("/users/{userId}/followers/count", userWithFollowersId))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andReturn();
-        //assert
-        assertEquals(expectedResponseString, actualResponse.getResponse().getContentAsString(StandardCharsets.UTF_8));
-    }
+
 
 }
