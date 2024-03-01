@@ -116,6 +116,10 @@ public class TestUtilGenerator {
         return new User(3, "Martin", false, new ArrayList<>(), new ArrayList<>());
     }
 
+    public static UserDTO getUserNowSeller() {
+        return new UserDTO(3, "Martin");
+    }
+
     public static List<Post> getPostsDisordered() {
         return List.of(
                 new Post(

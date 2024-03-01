@@ -4,6 +4,7 @@ import com.bootcamp.be_java_hisp_w25_g02.dto.response.FollowerCountDTO;
 import com.bootcamp.be_java_hisp_w25_g02.dto.response.UserFollowingDTO;
 import com.bootcamp.be_java_hisp_w25_g02.entity.User;
 import com.bootcamp.be_java_hisp_w25_g02.exception.BadRequestException;
+import com.bootcamp.be_java_hisp_w25_g02.exception.NotFoundException;
 import com.bootcamp.be_java_hisp_w25_g02.repository.IUserRepository;
 import com.bootcamp.be_java_hisp_w25_g02.util.TestUtilGenerator;
 import com.bootcamp.be_java_hisp_w25_g02.dto.response.FollowerListDTO;
@@ -125,7 +126,6 @@ class UserServiceImplTest {
 
 
     }
-
 
     @Test
     @DisplayName("T-0003 - Alphabetical Followed Order Doesn't Exist")
@@ -337,5 +337,95 @@ class UserServiceImplTest {
         verify(iUserRepository, atLeastOnce()).findById(userId);
         assertNotNull(result);
         assertThat(result.followersCount()).isEqualTo(user.getFollowedBy().size());
+    }
+
+    @Test
+    @DisplayName("Individual Bonus - getUserTotalFollowers BadRequestException")
+    void getUserTotalFollowers_BadRequestException() {
+        // Arrange
+        Integer id = 999999;
+
+        // Act + Assert
+        assertThrows(BadRequestException.class, () -> {
+            userServiceImpl.getUserTotalFollowers(id);
+        });
+    }
+
+    @Test
+    @DisplayName("Individual Bonus - isSeller return false")
+    void isSellerFalse() {
+        // Arrange
+        Boolean expected = false;
+        Integer id = 1;
+
+        // Act
+        Boolean result = userServiceImpl.isSeller(id);
+
+        // Assert
+        assertEquals(expected, result);
+    }
+
+    @Test
+    @DisplayName("Individual Bonus - makeSeller")
+    void makeSellerOK() {
+        // Arrange
+        Integer id = 3;
+        Optional<User> user = Optional.of(TestUtilGenerator.getUserNotSeller());
+        UserDTO expected = TestUtilGenerator.getUserNowSeller();
+
+        when(iUserRepository.findById(id)).thenReturn(user);
+        // Act
+        UserDTO result = userServiceImpl.makeSeller(id);
+
+        // Assert
+        assertEquals(expected, result);
+    }
+
+    @Test
+    @DisplayName("Individual Bonus - makeSeller BadRequestException")
+    void makeSeller_BadRequestException() {
+        // Arrange
+        Integer id = 99999;
+
+        // Act + Assert
+        assertThrows(BadRequestException.class, () -> {
+           userServiceImpl.makeSeller(id);
+        });
+    }
+
+    @Test
+    @DisplayName("Individual Bonus - getFollowedUsersId NotFoundException")
+    void getFollowedUsersId_NotFoundException() {
+        // Arrange
+        Integer id = 99999;
+
+        // Act + Assert
+        assertThrows(NotFoundException.class, () -> {
+            userServiceImpl.getFollowedUsersId(id);
+        });
+    }
+
+    @Test
+    @DisplayName("Individual Bonus - getFollowedSellers NotFoundException")
+    void  getFollowedSellers_NotFoundException() {
+        // Arrange
+        Integer id = 99999;
+
+        // Act + Assert
+        assertThrows(NotFoundException.class, () -> {
+            userServiceImpl.getFollowedSellers(id, null);
+        });
+    }
+
+    @Test
+    @DisplayName("Individual Bonus - followUser BadRequestException")
+    void followUser() {
+        // Arrange
+        Integer id = 99999;
+
+        // Act + Assert
+        assertThrows(BadRequestException.class, () -> {
+            userServiceImpl.followUser(id, null);
+        });
     }
 }

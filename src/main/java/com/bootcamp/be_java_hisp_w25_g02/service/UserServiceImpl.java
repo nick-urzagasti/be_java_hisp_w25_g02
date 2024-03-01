@@ -56,7 +56,7 @@ public class UserServiceImpl implements IUserService{
         Optional<User> user = this.userRepository.findById(id);
         if (user.isPresent()){
             user.get().setSeller(true);
-        }else {
+        } else {
             throw new BadRequestException("No encontrado el user con ese ID");
         }
         return userToUserDto(user.get());

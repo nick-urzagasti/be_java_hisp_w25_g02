@@ -2,6 +2,7 @@ package com.bootcamp.be_java_hisp_w25_g02.service;
 
 import com.bootcamp.be_java_hisp_w25_g02.dto.response.FollowingPostDTO;
 import com.bootcamp.be_java_hisp_w25_g02.exception.BadRequestException;
+import com.bootcamp.be_java_hisp_w25_g02.exception.NotFoundException;
 import com.bootcamp.be_java_hisp_w25_g02.repository.IPostRepository;
 import com.bootcamp.be_java_hisp_w25_g02.util.TestUtilGenerator;
 import org.junit.jupiter.api.DisplayName;
@@ -125,4 +126,15 @@ class PostServiceImplTest {
         assertEquals(expectedResponse, actualResponse);
     }
 
+    @Test
+    @DisplayName("Individual Bonus - getPostsOrderedByDate NotFoundException")
+    void getPostsOrderedByDate_NotFoundException() {
+        // Arrange
+        Integer id = 99999;
+
+        // Act + Assert
+        assertThrows(NotFoundException.class, () -> {
+           postService.getPostsOrderedByDate(id, null);
+        });
+    }
 }
