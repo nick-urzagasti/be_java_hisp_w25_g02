@@ -75,13 +75,16 @@ class UserControllerTest {
     @DisplayName("T-0007- getUserTotalFollowers")
     void getUserTotalFollowers() throws Exception {
         //Arrange - llama elementos a usar
-        FollowerCountDTO expected = new FollowerCountDTO(1, "Javier", 2L);
-        when(userService.getUserTotalFollowers(1)).thenReturn(expected);
+        Integer userId = 1;
+        Long totalFollowersCount = 2L;
+        FollowerCountDTO expected = new FollowerCountDTO(userId, "Javier", totalFollowersCount);
+
+        when(userService.getUserTotalFollowers(userId)).thenReturn(expected);
         //Act - ejecuta el método a testear
-        ResponseEntity<FollowerCountDTO> current = userController.getUserTotalFollowers(1);
+        ResponseEntity<FollowerCountDTO> current = userController.getUserTotalFollowers(userId);
+        FollowerCountDTO actual = current.getBody();
         //Assert - verifica que el resultado sea lo esperado
         assertThat(current.getStatusCode()).isEqualTo(HttpStatus.OK);
-        FollowerCountDTO actual = current.getBody();
         assertThat(actual).isEqualTo(expected);
     }
 }
