@@ -1,5 +1,6 @@
 package com.bootcamp.be_java_hisp_w25_g02.service;
 
+import com.bootcamp.be_java_hisp_w25_g02.dto.response.FollowerCountDTO;
 import com.bootcamp.be_java_hisp_w25_g02.dto.response.UserFollowingDTO;
 import com.bootcamp.be_java_hisp_w25_g02.entity.User;
 import com.bootcamp.be_java_hisp_w25_g02.exception.BadRequestException;
@@ -15,8 +16,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+
+import java.util.ArrayList;
 import java.util.Optional;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.List;
@@ -319,4 +325,19 @@ class UserServiceImplTest {
                 ()-> userServiceImpl.getFollowersList(1, incorrectOrderString));
     }
 
+    @Test
+    @DisplayName("T-0007 - Total followers given user ID")
+    void getUserTotalFollowers() {
+        //ARRANGE
+        User user = TestUtilGenerator.createUser1();
+        Integer userId = 1;
+        when(iUserRepository.findById(userId)).thenReturn(Optional.of(user));
+
+        //ACT
+        FollowerCountDTO result = userServiceImpl.getUserTotalFollowers(userId);
+        //ASSERT
+        verify(iUserRepository, atLeastOnce()).findById(userId);
+        assertNotNull(result);
+        assertThat(result.followersCount()).isEqualTo(user.getFollowedBy().size());
+    }
 }
