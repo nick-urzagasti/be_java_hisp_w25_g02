@@ -47,7 +47,7 @@ public class TestUtilGenerator {
         }
 
         public static FollowerCountDTO getCorrectFollowerCountDTOId1() {
-            return new FollowerCountDTO(7, "Maria", 0L);
+            return new FollowerCountDTO(7, "Maria", 1L);
         }
 
         public static GenericResponseDTO getSavedPostGenericResponseDTO(Integer id) {
