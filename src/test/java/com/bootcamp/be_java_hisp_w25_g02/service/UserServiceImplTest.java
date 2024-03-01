@@ -336,6 +336,7 @@ class UserServiceImplTest {
         //ACT
         FollowerCountDTO result = userServiceImpl.getUserTotalFollowers(userId);
         //ASSERT
+        verify(iUserRepository, atLeastOnce()).findById(userId);
         assertNotNull(result);
         assertThat(result.followersCount()).isEqualTo(user.getFollowedBy().size());
     }
